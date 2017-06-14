@@ -1,0 +1,46 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.3"
+
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    lintOptions { //防止其他一些错误
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}
+
+dependencies {
+    compile files('libs/org.apache.http.legacy.jar')
+//    compile files('libs/mediaplayersdk.jar')
+    compile 'com.android.support:appcompat-v7:25.3.1'
+}
+publish {
+    userOrg = 'srxffcc1'//bintray网的用户id
+    groupId = 'com.srxlike.rtsplib2'//自己定义一个唯一的java的包名
+    artifactId = 'rtsplib2'//在bintray上的package名字
+    publishVersion = '1.0.3'//版本号
+    desc = 'just upload this and ?'//描述，不重要
+    website = 'https://github.com/srxffcc1/un7zip'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
+    licences = ['Apache-2.0']//协议
+}
+tasks.withType(Javadoc) { //防止doc错误
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
