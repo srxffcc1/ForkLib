@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="pref_backup_category">"Sichern &amp; Wiederherstellen einst."</string>
+    <string name="pref_backup_category_summary">"Optionen zum Sichern und Wiederherstellen"</string>
+    <string name="pref_backuponexit_title">"Autom. Sichern beim Verlassen"</string>
+    <string name="pref_backuponexit_summary">"Sichere die Einstellungen automatisch beim Verlassen der Anwendung"</string>
+    <string name="pref_backuponbookclose_title">"Autom. Sichern beim Schließen e. Buchs"</string>
+    <string name="pref_backuponbookclose_summary">"Sichere die Einstellungen automatisch, wenn ein Dokument geschlossen wird"</string>
+    <string name="pref_maxnumberofautobackups_title">"Anzahl der autom. Sicherungen"</string>
+    <string name="pref_maxnumberofautobackups_summary">"Maximale Anzahl der automatischen Sicherungen die behalten werden sollen"</string>
+    <string name="pref_bookbackuptype_title">"Bucheinstellungs-Sicherung"</string>
+    <string name="pref_bookbackuptype_summary">"Sicherung der Bucheinstellungen"</string>
+    <string name="list_bookbackuptype_none">"Keine"</string>
+    <string name="list_bookbackuptype_recent">"Kürzliche"</string>
+    <string name="list_bookbackuptype_all">"Alle"</string>
+
+</resources>

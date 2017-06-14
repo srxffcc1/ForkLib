@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+
+    <string name="pref_ui_category">"Benutzeroberfläche"</string>
+    <string name="pref_ui_category_summary">"Einstellungen der Benutzeroberfläche"</string>
+    <string name="pref_lang_title">"Sprache"</string>
+    <string name="pref_lang_summary">"Sprache der Benutzeroberfläche (Neustart erfoderlich)"</string>-->
+<!--<string name="list_lang_default">"System"</string>-->
+    <string name="list_lang_en">"Englisch (English)"</string>
+    <string name="list_lang_de">"Deutsch"</string>
+    <string name="list_lang_es">"Spanisch (Español)"</string>
+    <string name="list_lang_fr">"Französisch (Française)"</string>
+    <string name="list_lang_it">"Italienisch (Italiano)"</string>
+    <string name="list_lang_nl">"Niederländisch (Nederlands)"</string>
+    <string name="list_lang_ru">"Russisch (Русский)"</string>
+    <string name="list_lang_uk">"Ukrainisch (Український)"</string>
+    <string name="list_lang_zh">"Chinesisch (中文简体)"</string>
+    <string name="list_lang_iw">"Hebräisch (עברית)"</string>
+    <string name="pref_loadrecent_title">"Letztes öffnen"</string>
+    <string name="pref_loadrecent_summary">"Beim Start das zuletzt gelesene Buch öffnen"</string>
+    <string name="pref_confirmclose_title">"Schließen bestätigen"</string>
+    <string name="pref_confirmclose_summary">"Schließbestätigung nach dem Drücken von 'Zurück'"</string>
+    <string name="pref_brightness_title">"Helligkeit"</string>
+    <string name="pref_brightness_summary">"Einstellungen der Gesamtbildhelligkeit (0–100)"</string>
+    <string name="pref_brightnessnightmodeonly_title">"Helligkeit im Nachtmodus"</string>
+    <string name="pref_brightnessnightmodeonly_summary">"Anwendung der Helligkeitseinstellungen nur im Nachtmodus"</string>
+    <string name="pref_keepscreenon_title">"Bildschirm nicht ausschalten"</string>
+    <string name="pref_keepscreenon_summary">"Nicht in den Schlafmodus umschalten"</string>
+    <string name="pref_fullscreen_title">"Vollbildschirm"</string>
+    <string name="pref_fullscreen_summary">"Statuszeile ausblenden."</string>
+    <string name="pref_title_title">"Titel"</string>
+    <string name="pref_title_summary">"Titel anzeigen. Neuöffnung des Dokuments erforderlich"</string>
+    <string name="pref_pageintitle_title">"Seite im Titel"</string>
+    <string name="pref_pageintitle_summary">"Laufende Seitennummer im Titel anzeigen"</string>
+    <string name="pref_pagenumbertoastposition_title">"Position des Seitenzahlanzeigers"</string>
+    <string name="pref_pagenumbertoastposition_summary">"Position des Seitenzahlanzeigers"</string>
+    <string name="pref_zoomtoastposition_title">"Position des Zoom-Anzeigers"</string>
+    <string name="pref_zoomtoastposition_summary">"Position des Zoom-Anzeigers"</string>
+    <string name="list_toastposition_invisible">"Nicht anzeigen"</string>
+    <string name="list_toastposition_lefttop">"Links unten"</string>
+    <string name="list_toastposition_righttop">"Rechts oben"</string>
+    <string name="list_toastposition_leftbottom">"Links unten"</string>
+    <string name="list_toastposition_bottom">"Unten"</string>
+    <string name="list_toastposition_righbottom">"Rechts unten"</string>
+    <string name="pref_showanimicon_title">"Animationstyp anzeigen"</string>
+    <string name="pref_showanimicon_summary">"Animationstyp anzeigen, wenn Funktionen 'Blättern' oder 'Ziehen' zugänglich sind"</string>
+
+</resources>
