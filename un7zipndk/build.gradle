@@ -1,0 +1,49 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.novoda.bintray-release'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
+    defaultConfig {
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        ndk {
+            moduleName "un7zip"
+            ldLibs "log"
+            //abiFilters "armeabi", "armeabi-v7a"
+        }
+    }
+    externalNativeBuild {
+
+        // Encapsulates your CMake build configurations.
+        ndkBuild {
+            path 'src/main/jni/Android.mk'
+        }
+    }
+    lintOptions { //防止其他一些错误
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}
+
+
+publish {
+    userOrg = 'srxffcc1'//bintray网的用户id
+    groupId = 'com.srxdrop.un7zip'//自己定义一个唯一的java的包名
+    artifactId = 'srxdrop'//在bintray上的package名字
+    publishVersion = '1.0.0'//版本号
+    desc = 'just upload this and ?'//描述，不重要
+    website = 'https://github.com/srxffcc1/un7zip'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
+    licences = ['Apache-2.0']//协议
+}
+tasks.withType(Javadoc) { //防止doc错误
+    options.addStringOption('Xdoclint:none', '-quiet')
+    options.addStringOption('encoding', 'UTF-8')
+    options.addStringOption('charSet', 'UTF-8')
+}
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:25.0.1'
+}

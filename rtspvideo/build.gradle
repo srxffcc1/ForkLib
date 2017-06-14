@@ -1,0 +1,30 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
+
+    defaultConfig {
+        applicationId "veg.mediaplayer.sdk.testmulti2"
+        minSdkVersion 18
+        targetSdkVersion 22
+        ndk {
+            // 设置支持的SO库架构
+            abiFilters  'armeabi-v7a'//,'armeabi'//,'x86', 'x86_64', 'arm64-v8a','armeabi',armeabi-v7a
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+}
+dependencies {
+    compile 'com.android.support:appcompat-v7:24.+'
+//    compile files('libs/org.apache.http.legacy.jar')
+    //    compile files('libs/mediaplayersdk.jar')
+//    compile project(':rtsplib')
+    compile ('com.srxlike.rtsplib:rtsplib:1.0.3'){ exclude group: 'com.android.support' }
+}

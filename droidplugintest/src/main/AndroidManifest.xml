@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.TestPlugin"
+    android:installLocation="preferExternal"
+    android:versionCode="1"
+    android:versionName="1.0">
+    <uses-feature android:glEsVersion="0x00010001" android:required="true"/>
+    <permission android:name="com.iiseeuu.jssafety.permission.JPUSH_MESSAGE" android:protectionLevel="signature"/>
+    <uses-permission android:name="com.iiseeuu.jssafety.permission.JPUSH_MESSAGE"/>
+    <uses-permission android:name="android.permission.BAIDU_LOCATION_SERVICE"/>
+    <uses-sdk
+        android:minSdkVersion="18"
+        android:targetSdkVersion="23" />
+    <application
+        android:name="com.morgoo.droidplugin.PluginApplication"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name="MyActivity"
+            android:configChanges="orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+    </application>
+</manifest>
