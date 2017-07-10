@@ -24,8 +24,9 @@ android {
 }
 
 dependencies {
-    compile files('libs/zip4j_1.3.2.jar')
-    compile files('libs/java-unrar-0.5.jar')
+    compile 'net.lingala.zip4j:zip4j:1.3.2'
+    compile 'org.tukaani:xz:1.6'
+    compile group: 'com.github.junrar', name: 'junrar', version: '0.7'
 }
 publish {
     userOrg = 'srxffcc1'//bintray网的用户id

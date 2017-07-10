@@ -7,3 +7,5 @@
 //include ':legendCore'
 //include ':kjhttp'
 //include ':common'
+include ':document-viewer'
+include ':unzip'
