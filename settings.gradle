@@ -9,3 +9,5 @@
 //include ':common'
 include ':document-viewer'
 include ':unzip'
+include ':droidplugin'
+
