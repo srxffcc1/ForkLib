@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements PlayerCallback
 			players.add(player);
 		}
 
-		strUrl = settings.getString("connectionUrl", "http://yoyo-v-out.oss-cn-hangzhou.aliyuncs.com/012e47d2eb1e49a7bd1a27e6c0f37d9f/act-m3u8-segment/022a79ae-9bc7-7e1c-3926-e9c87b360f81.mp4");
+		strUrl = settings.getString("connectionUrl", "rtsp://58.213.148.37:9020/device/3301061000012/channel/0/stream/1");
 		
 		HashSet<String> tempHistory = new HashSet<String>();
 		tempHistory.add("http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8");
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements PlayerCallback
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN); 
 	
 		edtIpAddress = (AutoCompleteTextView)findViewById(R.id.edit_ipaddress);
-		edtIpAddress.setText(strUrl);
+		edtIpAddress.setText("rtsp://58.213.148.37:9020/device/3301061000012/channel/0/stream/1");
 
 		edtIpAddress.setOnEditorActionListener(new OnEditorActionListener() 
 		{
