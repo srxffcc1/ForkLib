@@ -7,8 +7,9 @@
 //include ':legendCore'
 //include ':kjhttp'
 //include ':common'
-include ':document-viewer'
-include ':unzip'
-include ':droidplugin'
-include ':rtspvideo'
+//include ':document-viewer'
+include ':playerlib'
+include ':playerdisk'
+//include ':droidplugin'
+//include ':rtspvideo'
 
