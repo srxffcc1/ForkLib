@@ -156,8 +156,7 @@ public class NetMediaActivty extends AppCompatActivity implements View.OnClickLi
 
 
         } else if (i == R.id.net_scan) {
-            Intent intent1 = new Intent(this, CaptureActivity.class);
-            startActivityForResult(intent1, 0);
+
 
         } else if (i == R.id.net_setting) {
             Intent intent2 = new Intent(this, SettingActivity.class);
