@@ -8,7 +8,7 @@
 //include ':kjhttp'
 //include ':common'
 //include ':document-viewer'
-include ':playerlib'
+//include ':playerlib'
 include ':playerdisk'
 //include ':droidplugin'
 //include ':rtspvideo'
