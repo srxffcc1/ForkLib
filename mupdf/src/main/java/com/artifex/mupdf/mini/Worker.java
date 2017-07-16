@@ -2,51 +2,51 @@ package com.artifex.mupdf.mini;
 
 import android.app.Activity;
 import android.util.Log;
+
 import java.util.concurrent.LinkedBlockingQueue;
 
-public class Worker implements Runnable {
-    protected Activity activity;
-    protected boolean alive;
-    protected LinkedBlockingQueue<Task> queue = new LinkedBlockingQueue();
+public class Worker implements Runnable
+{
+	public static class Task implements Runnable {
+		public void work() {} /* The 'work' method will be executed on the background thread. */
+		public void run() {} /* The 'run' method will be executed on the UI thread. */
+	}
 
-    public static class Task implements Runnable {
-        public void work() {
-        }
+	protected Activity activity;
+	protected LinkedBlockingQueue<Task> queue;
+	protected boolean alive;
 
-        public void run() {
-        }
-    }
+	public Worker(Activity act) {
+		activity = act;
+		queue = new LinkedBlockingQueue<Task>();
+	}
 
-    public Worker(Activity act) {
-        this.activity = act;
-    }
+	public void start() {
+		alive = true;
+		new Thread(this).start();
+	}
 
-    public void start() {
-        this.alive = true;
-        new Thread(this).start();
-    }
+	public void stop() {
+		alive = false;
+	}
 
-    public void stop() {
-        this.alive = false;
-    }
+	public void add(Task task) {
+		try {
+			queue.put(task);
+		} catch (InterruptedException x) {
+			Log.e("MuPDF Worker", x.getMessage());
+		}
+	}
 
-    public void add(Task task) {
-        try {
-            this.queue.put(task);
-        } catch (InterruptedException x) {
-            Log.e("MuPDF Worker", x.getMessage());
-        }
-    }
-
-    public void run() {
-        while (this.alive) {
-            try {
-                Task task = (Task) this.queue.take();
-                task.work();
-                this.activity.runOnUiThread(task);
-            } catch (Throwable x) {
-                Log.e("MuPDF Worker", x.getMessage());
-            }
-        }
-    }
+	public void run() {
+		while (alive) {
+			try {
+				Task task = queue.take();
+				task.work();
+				activity.runOnUiThread(task);
+			} catch (Throwable x) {
+				Log.e("MuPDF Worker", x.getMessage());
+			}
+		}
+	}
 }

@@ -1,12 +1,11 @@
 package com.artifex.mupdf.mini;
 
 import android.app.Activity;
-import android.app.AlertDialog.Builder;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -15,434 +14,412 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.PopupMenu;
-import android.widget.PopupMenu.OnMenuItemClickListener;
 import android.widget.SeekBar;
-import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
-import com.artifex.mupdf.fitz.Device;
+
 import com.artifex.mupdf.fitz.Document;
 import com.artifex.mupdf.fitz.Link;
 import com.artifex.mupdf.fitz.Matrix;
 import com.artifex.mupdf.fitz.Outline;
 import com.artifex.mupdf.fitz.Page;
 import com.artifex.mupdf.fitz.android.AndroidDrawDevice;
-import com.artifex.mupdf.mini.OutlineActivity.Item;
-import com.artifex.mupdf.mini.Worker.Task;
+
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class DocumentActivity extends Activity {
-    private final String APP = "MuPDF";
-    public final int NAVIGATE_REQUEST = 1;
-    protected View actionBar;
-    protected int canvasH;
-    protected int canvasW;
-    protected int currentPage;
-    protected float displayDPI;
-    protected Document doc;
-    protected ArrayList<Item> flatOutline;
-    protected boolean hasLoaded;
-    protected Stack<Integer> history;
-    protected boolean isReflowable;
-    protected View layoutButton;
-    protected float layoutEm;
-    protected float layoutH;
-    protected PopupMenu layoutPopupMenu;
-    protected float layoutW;
-    protected View navigationBar;
-    protected View outlineButton;
-    protected int pageCount;
-    protected TextView pageLabel;
-    protected SeekBar pageSeekbar;
-    protected PageView pageView;
-    protected String path;
-    protected SharedPreferences prefs;
-    protected String title;
-    protected TextView titleLabel;
-    protected boolean wentBack;
-    protected Worker worker;
+public class DocumentActivity extends Activity
+{
+	private final String APP = "MuPDF";
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(1);
-        getWindow().addFlags(1024);
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        this.displayDPI = (float) metrics.densityDpi;
-        setContentView(R.layout.document_activity);
-        this.actionBar = findViewById(R.id.action_bar);
-        this.navigationBar = findViewById(R.id.navigation_bar);
-        this.path = getIntent().getData().getPath();
-        this.title = this.path.substring(this.path.lastIndexOf(47) + 1);
-        this.titleLabel = (TextView) findViewById(R.id.title_label);
-        this.titleLabel.setText(this.title);
-        this.history = new Stack();
-        this.worker = new Worker(this);
-        this.worker.start();
-        this.prefs = getPreferences(0);
-        this.layoutEm = this.prefs.getFloat("layoutEm", 8.0f);
-        this.currentPage = this.prefs.getInt(this.path, 0);
-        this.hasLoaded = false;
-        this.pageView = (PageView) findViewById(R.id.page_view);
-        this.pageView.setActionListener(this);
-        this.pageLabel = (TextView) findViewById(R.id.page_label);
-        this.pageSeekbar = (SeekBar) findViewById(R.id.page_seekbar);
-        this.pageSeekbar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
-            public int newProgress = -1;
+	public final int NAVIGATE_REQUEST = 1;
 
-            public void onProgressChanged(SeekBar seekbar, int progress, boolean fromUser) {
-                if (fromUser) {
-                    this.newProgress = progress;
-                    DocumentActivity.this.pageLabel.setText((progress + 1) + " / " + DocumentActivity.this.pageCount);
-                }
-            }
+	protected Worker worker;
+	protected SharedPreferences prefs;
 
-            public void onStartTrackingTouch(SeekBar seekbar) {
-            }
+	protected Document doc;
+	protected String path;
+	protected boolean hasLoaded;
+	protected boolean isReflowable;
+	protected String title;
+	protected ArrayList<OutlineActivity.Item> flatOutline;
+	protected float layoutW, layoutH, layoutEm;
+	protected float displayDPI;
+	protected int canvasW, canvasH;
 
-            public void onStopTrackingTouch(SeekBar seekbar) {
-                DocumentActivity.this.gotoPage(this.newProgress);
-            }
-        });
-        this.outlineButton = findViewById(R.id.outline_button);
-        this.outlineButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                Intent intent = new Intent(DocumentActivity.this, OutlineActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putInt("POSITION", DocumentActivity.this.currentPage);
-                bundle.putSerializable("OUTLINE", DocumentActivity.this.flatOutline);
-                intent.putExtras(bundle);
-                DocumentActivity.this.startActivityForResult(intent, 1);
-            }
-        });
-        this.layoutButton = findViewById(R.id.layout_button);
-        this.layoutPopupMenu = new PopupMenu(this, this.layoutButton);
-        this.layoutPopupMenu.getMenuInflater().inflate(R.menu.layout_menu, this.layoutPopupMenu.getMenu());
-        this.layoutPopupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-            public boolean onMenuItemClick(MenuItem item) {
-                float oldLayoutEm = DocumentActivity.this.layoutEm;
-                int i = item.getItemId();
-                if (i == R.id.action_layout_6pt) {
-                    DocumentActivity.this.layoutEm = 6.0f;
+	protected PageView pageView;
+	protected View actionBar;
+	protected TextView titleLabel;
+	protected View layoutButton;
+	protected PopupMenu layoutPopupMenu;
+	protected View outlineButton;
+	protected View navigationBar;
+	protected TextView pageLabel;
+	protected SeekBar pageSeekbar;
 
-                } else if (i == R.id.action_layout_7pt) {
-                    DocumentActivity.this.layoutEm = 7.0f;
+	protected int pageCount;
+	protected int currentPage;
+	protected Stack<Integer> history;
+	protected boolean wentBack;
 
-                } else if (i == R.id.action_layout_8pt) {
-                    DocumentActivity.this.layoutEm = 8.0f;
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-                } else if (i == R.id.action_layout_9pt) {
-                    DocumentActivity.this.layoutEm = 9.0f;
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		displayDPI = metrics.densityDpi;
 
-                } else if (i == R.id.action_layout_10pt) {
-                    DocumentActivity.this.layoutEm = 10.0f;
+		setContentView(R.layout.document_activity);
+		actionBar = findViewById(R.id.action_bar);
+		navigationBar = findViewById(R.id.navigation_bar);
 
-                } else if (i == R.id.action_layout_11pt) {
-                    DocumentActivity.this.layoutEm = 11.0f;
+		/* Note: we only support file:// URIs. Supporting content:// will be trickier. */
+		path = getIntent().getData().getPath();
 
-                } else if (i == R.id.action_layout_12pt) {
-                    DocumentActivity.this.layoutEm = 12.0f;
+		title = path.substring(path.lastIndexOf('/') + 1);
+		titleLabel = (TextView)findViewById(R.id.title_label);
+		titleLabel.setText(title);
 
-                } else if (i == R.id.action_layout_13pt) {
-                    DocumentActivity.this.layoutEm = 13.0f;
+		history = new Stack<Integer>();
 
-                } else if (i == R.id.action_layout_14pt) {
-                    DocumentActivity.this.layoutEm = 14.0f;
+		worker = new Worker(this);
+		worker.start();
 
-                } else if (i == R.id.action_layout_15pt) {
-                    DocumentActivity.this.layoutEm = 15.0f;
+		prefs = getPreferences(Context.MODE_PRIVATE);
+		layoutEm = prefs.getFloat("layoutEm", 8);
+		currentPage = prefs.getInt(path, 0);
+		hasLoaded = false;
 
-                } else if (i == R.id.action_layout_16pt) {
-                    DocumentActivity.this.layoutEm = 16.0f;
+		pageView = (PageView)findViewById(R.id.page_view);
+		pageView.setActionListener(this);
 
-                }
-                if (oldLayoutEm != DocumentActivity.this.layoutEm) {
-                    DocumentActivity.this.relayoutDocument();
-                }
-                return true;
-            }
-        });
-        this.layoutButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-                DocumentActivity.this.layoutPopupMenu.show();
-            }
-        });
-    }
+		pageLabel = (TextView)findViewById(R.id.page_label);
+		pageSeekbar = (SeekBar)findViewById(R.id.page_seekbar);
+		pageSeekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			public int newProgress = -1;
+			public void onProgressChanged(SeekBar seekbar, int progress, boolean fromUser) {
+				if (fromUser) {
+					newProgress = progress;
+					pageLabel.setText((progress+1) + " / " + pageCount);
+				}
+			}
+			public void onStartTrackingTouch(SeekBar seekbar) {}
+			public void onStopTrackingTouch(SeekBar seekbar) {
+				gotoPage(newProgress);
+			}
+		});
 
-    public void onPageViewSizeChanged(int w, int h) {
-        this.canvasW = w;
-        this.canvasH = h;
-        this.layoutW = ((float) (this.canvasW * 72)) / this.displayDPI;
-        this.layoutH = ((float) (this.canvasH * 72)) / this.displayDPI;
-        if (!this.hasLoaded) {
-            this.hasLoaded = true;
-            openDocument();
-        } else if (this.isReflowable) {
-            relayoutDocument();
-        } else {
-            loadPage();
-        }
-    }
+		outlineButton = (View)findViewById(R.id.outline_button);
+		outlineButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Intent intent = new Intent(DocumentActivity.this, OutlineActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putInt("POSITION", currentPage);
+				bundle.putSerializable("OUTLINE", flatOutline);
+				intent.putExtras(bundle);
+				startActivityForResult(intent, NAVIGATE_REQUEST);
+			}
+		});
 
-    protected void openDocument() {
-        this.worker.add(new Task() {
-            boolean needsPassword;
+		layoutButton = (View)findViewById(R.id.layout_button);
+		layoutPopupMenu = new PopupMenu(this, layoutButton);
+		layoutPopupMenu.getMenuInflater().inflate(R.menu.layout_menu, layoutPopupMenu.getMenu());
+		layoutPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+			public boolean onMenuItemClick(MenuItem item) {
+				float oldLayoutEm = layoutEm;
+				int i = item.getItemId();
+				if (i == R.id.action_layout_6pt) {
+					layoutEm = 6;
+				} else if (i == R.id.action_layout_7pt) {
+					layoutEm = 7;
+				} else if (i == R.id.action_layout_8pt) {
+					layoutEm = 8;
+				} else if (i == R.id.action_layout_9pt) {
+					layoutEm = 9;
+				} else if (i == R.id.action_layout_10pt) {
+					layoutEm = 10;
+				} else if (i == R.id.action_layout_11pt) {
+					layoutEm = 11;
+				} else if (i == R.id.action_layout_12pt) {
+					layoutEm = 12;
+				} else if (i == R.id.action_layout_13pt) {
+					layoutEm = 13;
+				} else if (i == R.id.action_layout_14pt) {
+					layoutEm = 14;
+				} else if (i == R.id.action_layout_15pt) {
+					layoutEm = 15;
+				} else if (i == R.id.action_layout_16pt) {
+					layoutEm = 16;
+				}
+				if (oldLayoutEm != layoutEm)
+					relayoutDocument();
+				return true;
+			}
+		});
+		layoutButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				layoutPopupMenu.show();
+			}
+		});
+	}
 
-            public void work() {
-                Log.i("MuPDF", "open document");
-                DocumentActivity.this.doc = Document.openDocument(DocumentActivity.this.path);
-                this.needsPassword = DocumentActivity.this.doc.needsPassword();
-            }
+	public void onPageViewSizeChanged(int w, int h) {
+		canvasW = w;
+		canvasH = h;
+		layoutW = canvasW * 72 / displayDPI;
+		layoutH = canvasH * 72 / displayDPI;
+		if (!hasLoaded) {
+			hasLoaded = true;
+			openDocument();
+		} else if (isReflowable) {
+			relayoutDocument();
+		} else {
+			loadPage();
+		}
+	}
 
-            public void run() {
-                if (this.needsPassword) {
-                    DocumentActivity.this.askPassword(R.string.dlog_password_message);
-                } else {
-                    DocumentActivity.this.loadDocument();
-                }
-            }
-        });
-    }
+	protected void openDocument() {
+		worker.add(new Worker.Task() {
+			boolean needsPassword;
+			public void work() {
+				Log.i(APP, "open document");
+				doc = Document.openDocument(path);
+				needsPassword = doc.needsPassword();
+			}
+			public void run() {
+				if (needsPassword)
+					askPassword(R.string.dlog_password_message);
+				else
+					loadDocument();
+			}
+		});
+	}
 
-    protected void askPassword(int message) {
-        final EditText passwordView = new EditText(this);
-        passwordView.setInputType(Device.FLAG_ENDCAP_UNDEFINED);
-        passwordView.setTransformationMethod(PasswordTransformationMethod.getInstance());
-        Builder builder = new Builder(this);
-        builder.setTitle(R.string.dlog_password_title);
-        builder.setMessage(message);
-        builder.setView(passwordView);
-        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                DocumentActivity.this.checkPassword(passwordView.getText().toString());
-            }
-        });
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                DocumentActivity.this.finish();
-            }
-        });
-        builder.setOnCancelListener(new OnCancelListener() {
-            public void onCancel(DialogInterface dialog) {
-                DocumentActivity.this.finish();
-            }
-        });
-        builder.create().show();
-    }
+	protected void askPassword(int message) {
+		final EditText passwordView = new EditText(this);
+		passwordView.setInputType(EditorInfo.TYPE_TEXT_VARIATION_PASSWORD);
+		passwordView.setTransformationMethod(PasswordTransformationMethod.getInstance());
 
-    protected void checkPassword(final String password) {
-        this.worker.add(new Task() {
-            boolean passwordOkay;
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setTitle(R.string.dlog_password_title);
+		builder.setMessage(message);
+		builder.setView(passwordView);
+		builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				checkPassword(passwordView.getText().toString());
+			}
+		});
+		builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int id) {
+				finish();
+			}
+		});
+		builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+			public void onCancel(DialogInterface dialog) {
+				finish();
+			}
+		});
+		builder.create().show();
+	}
 
-            public void work() {
-                Log.i("MuPDF", "check password");
-                this.passwordOkay = DocumentActivity.this.doc.authenticatePassword(password);
-            }
+	protected void checkPassword(final String password) {
+		worker.add(new Worker.Task() {
+			boolean passwordOkay;
+			public void work() {
+				Log.i(APP, "check password");
+				passwordOkay = doc.authenticatePassword(password);
+			}
+			public void run() {
+				if (passwordOkay)
+					loadDocument();
+				else
+					askPassword(R.string.dlog_password_retry);
+			}
+		});
+	}
 
-            public void run() {
-                if (this.passwordOkay) {
-                    DocumentActivity.this.loadDocument();
-                } else {
-                    DocumentActivity.this.askPassword(R.string.dlog_password_retry);
-                }
-            }
-        });
-    }
+	public void onPause() {
+		super.onPause();
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putFloat("layoutEm", layoutEm);
+		editor.putInt(path, currentPage);
+		editor.commit();
+	}
 
-    public void onPause() {
-        super.onPause();
-        Editor editor = this.prefs.edit();
-        editor.putFloat("layoutEm", this.layoutEm);
-        editor.putInt(this.path, this.currentPage);
-        editor.commit();
-    }
+	public void onBackPressed() {
+		if (history.empty()) {
+			super.onBackPressed();
+		} else {
+			currentPage = history.pop();
+			loadPage();
+		}
+	}
 
-//    public void onBackPressed() {
-//        if (this.history.empty()) {
-//            super.onBackPressed();
-//            return;
-//        }
-//        this.currentPage = ((Integer) this.history.pop()).intValue();
-//        loadPage();
-//    }
+	public void onActivityResult(int request, int result, Intent data) {
+		if (request == NAVIGATE_REQUEST && result >= RESULT_FIRST_USER)
+			gotoPage(result - RESULT_FIRST_USER);
+	}
 
-    public void onActivityResult(int request, int result, Intent data) {
-        if (request == 1 && result >= 1) {
-            gotoPage(result - 1);
-        }
-    }
+	protected void loadDocument() {
+		worker.add(new Worker.Task() {
+			public void work() {
+				try {
+					Log.i(APP, "load document");
+					String metaTitle = doc.getMetaData(Document.META_INFO_TITLE);
+					if (metaTitle != null)
+						title = metaTitle;
+					isReflowable = doc.isReflowable();
+					if (isReflowable) {
+						Log.i(APP, "layout document");
+						doc.layout(layoutW, layoutH, layoutEm);
+					}
+					pageCount = doc.countPages();
+				} catch (Throwable x) {
+					Log.e(APP, x.getMessage());
+					doc = null;
+					pageCount = 1;
+					currentPage = 0;
+				}
+			}
+			public void run() {
+				if (currentPage < 0 || currentPage >= pageCount)
+					currentPage = 0;
+				titleLabel.setText(title);
+				if (isReflowable)
+					layoutButton.setVisibility(View.VISIBLE);
+				loadPage();
+				loadOutline();
+			}
+		});
+	}
 
-    protected void loadDocument() {
-        this.worker.add(new Task() {
-            public void work() {
-                try {
-                    Log.i("MuPDF", "load document");
-                    String metaTitle = DocumentActivity.this.doc.getMetaData(Document.META_INFO_TITLE);
-                    if (metaTitle != null) {
-                        DocumentActivity.this.title = metaTitle;
-                    }
-                    DocumentActivity.this.isReflowable = DocumentActivity.this.doc.isReflowable();
-                    if (DocumentActivity.this.isReflowable) {
-                        Log.i("MuPDF", "layout document");
-                        DocumentActivity.this.doc.layout(DocumentActivity.this.layoutW, DocumentActivity.this.layoutH, DocumentActivity.this.layoutEm);
-                    }
-                    DocumentActivity.this.pageCount = DocumentActivity.this.doc.countPages();
-                } catch (Throwable x) {
-                    Log.e("MuPDF", x.getMessage());
-                    DocumentActivity.this.doc = null;
-                    DocumentActivity.this.pageCount = 1;
-                    DocumentActivity.this.currentPage = 0;
-                }
-            }
+	protected void relayoutDocument() {
+		worker.add(new Worker.Task() {
+			public void work() {
+				try {
+					long mark = doc.makeBookmark(currentPage);
+					Log.i(APP, "relayout document");
+					doc.layout(layoutW, layoutH, layoutEm);
+					pageCount = doc.countPages();
+					currentPage = doc.findBookmark(mark);
+				} catch (Throwable x) {
+					Log.e(APP, x.getMessage());
+					pageCount = 1;
+					currentPage = 0;
+				}
+			}
+			public void run() {
+				loadPage();
+				loadOutline();
+			}
+		});
+	}
 
-            public void run() {
-                if (DocumentActivity.this.currentPage < 0 || DocumentActivity.this.currentPage >= DocumentActivity.this.pageCount) {
-                    DocumentActivity.this.currentPage = 0;
-                }
-                DocumentActivity.this.titleLabel.setText(DocumentActivity.this.title);
-                if (DocumentActivity.this.isReflowable) {
-                    DocumentActivity.this.layoutButton.setVisibility(0);
-                }
-                DocumentActivity.this.loadPage();
-                DocumentActivity.this.loadOutline();
-            }
-        });
-    }
+	private void loadOutline() {
+		worker.add(new Worker.Task() {
+			private void flattenOutline(Outline[] outline, String indent) {
+				for (Outline node : outline) {
+					if (node.title != null)
+						flatOutline.add(new OutlineActivity.Item(indent + node.title, node.page));
+					if (node.down != null)
+						flattenOutline(node.down, indent + "    ");
+				}
+			}
+			public void work() {
+				Log.i(APP, "load outline");
+				Outline[] outline = doc.loadOutline();
+				if (outline != null) {
+					flatOutline = new ArrayList<OutlineActivity.Item>();
+					flattenOutline(outline, "");
+				} else {
+					flatOutline = null;
+				}
+			}
+			public void run() {
+				if (flatOutline != null)
+					outlineButton.setVisibility(View.VISIBLE);
+			}
+		});
+	}
 
-    protected void relayoutDocument() {
-        this.worker.add(new Task() {
-            public void work() {
-                try {
-                    long mark = DocumentActivity.this.doc.makeBookmark(DocumentActivity.this.currentPage);
-                    Log.i("MuPDF", "relayout document");
-                    DocumentActivity.this.doc.layout(DocumentActivity.this.layoutW, DocumentActivity.this.layoutH, DocumentActivity.this.layoutEm);
-                    DocumentActivity.this.pageCount = DocumentActivity.this.doc.countPages();
-                    DocumentActivity.this.currentPage = DocumentActivity.this.doc.findBookmark(mark);
-                } catch (Throwable x) {
-                    Log.e("MuPDF", x.getMessage());
-                    DocumentActivity.this.pageCount = 1;
-                    DocumentActivity.this.currentPage = 0;
-                }
-            }
+	protected void loadPage() {
+		final int pageNumber = currentPage;
+		worker.add(new Worker.Task() {
+			public Bitmap bitmap;
+			public Link[] links;
+			public void work() {
+				try {
+					Log.i(APP, "load page " + pageNumber);
+					Page page = doc.loadPage(pageNumber);
+					Log.i(APP, "draw page " + pageNumber);
+					Matrix ctm = AndroidDrawDevice.fitPageWidth(page, canvasW);
+					bitmap = AndroidDrawDevice.drawPage(page, ctm);
+					links = page.getLinks();
+					if (links != null)
+						for (Link link : links)
+							link.bounds.transform(ctm);
+				} catch (Throwable x) {
+					Log.e(APP, x.getMessage());
+				}
+			}
+			public void run() {
+				if (bitmap != null)
+					pageView.setBitmap(bitmap, wentBack, links);
+				else
+					pageView.setError();
+				pageLabel.setText((currentPage+1) + " / " + pageCount);
+				pageSeekbar.setMax(pageCount - 1);
+				pageSeekbar.setProgress(pageNumber);
+				wentBack = false;
+			}
+		});
+	}
 
-            public void run() {
-                DocumentActivity.this.loadPage();
-                DocumentActivity.this.loadOutline();
-            }
-        });
-    }
+	public void toggleUI() {
+		if (actionBar.getVisibility() == View.VISIBLE) {
+			actionBar.setVisibility(View.GONE);
+			navigationBar.setVisibility(View.GONE);
+		} else {
+			actionBar.setVisibility(View.VISIBLE);
+			navigationBar.setVisibility(View.VISIBLE);
+		}
+	}
 
-    private void loadOutline() {
-        this.worker.add(new Task() {
-            private void flattenOutline(Outline[] outline, String indent) {
-                for (Outline node : outline) {
-                    if (node.title != null) {
-                        DocumentActivity.this.flatOutline.add(new Item(indent + node.title, node.page));
-                    }
-                    if (node.down != null) {
-                        flattenOutline(node.down, indent + "    ");
-                    }
-                }
-            }
+	public void goBackward() {
+		if (currentPage > 0) {
+			wentBack = true;
+			currentPage --;
+			loadPage();
+		}
+	}
 
-            public void work() {
-                Log.i("MuPDF", "load outline");
-                Outline[] outline = DocumentActivity.this.doc.loadOutline();
-                if (outline != null) {
-                    DocumentActivity.this.flatOutline = new ArrayList();
-                    flattenOutline(outline, "");
-                    return;
-                }
-                DocumentActivity.this.flatOutline = null;
-            }
+	public void goForward() {
+		if (currentPage < pageCount - 1) {
+			currentPage ++;
+			loadPage();
+		}
+	}
 
-            public void run() {
-                if (DocumentActivity.this.flatOutline != null) {
-                    DocumentActivity.this.outlineButton.setVisibility(0);
-                }
-            }
-        });
-    }
+	public void gotoPage(int p) {
+		if (p >= 0 && p < pageCount && p != currentPage) {
+			history.push(currentPage);
+			currentPage = p;
+			loadPage();
+		}
+	}
 
-    protected void loadPage() {
-        final int pageNumber = this.currentPage;
-        this.worker.add(new Task() {
-            public Bitmap bitmap;
-            public Link[] links;
-
-            public void work() {
-                try {
-                    Log.i("MuPDF", "load page " + pageNumber);
-                    Page page = DocumentActivity.this.doc.loadPage(pageNumber);
-                    Log.i("MuPDF", "draw page " + pageNumber);
-                    Matrix ctm = AndroidDrawDevice.fitPageWidth(page, DocumentActivity.this.canvasW);
-                    this.bitmap = AndroidDrawDevice.drawPage(page, ctm);
-                    this.links = page.getLinks();
-                    if (this.links != null) {
-                        for (Link link : this.links) {
-                            link.bounds.transform(ctm);
-                        }
-                    }
-                } catch (Throwable x) {
-                    Log.e("MuPDF", x.getMessage());
-                }
-            }
-
-            public void run() {
-                if (this.bitmap != null) {
-                    DocumentActivity.this.pageView.setBitmap(this.bitmap, DocumentActivity.this.wentBack, this.links);
-                } else {
-                    DocumentActivity.this.pageView.setError();
-                }
-                DocumentActivity.this.pageLabel.setText((DocumentActivity.this.currentPage + 1) + " / " + DocumentActivity.this.pageCount);
-                DocumentActivity.this.pageSeekbar.setMax(DocumentActivity.this.pageCount - 1);
-                DocumentActivity.this.pageSeekbar.setProgress(pageNumber);
-                DocumentActivity.this.wentBack = false;
-            }
-        });
-    }
-
-    public void toggleUI() {
-        if (this.actionBar.getVisibility() == 0) {
-            this.actionBar.setVisibility(8);
-            this.navigationBar.setVisibility(8);
-            return;
-        }
-        this.actionBar.setVisibility(0);
-        this.navigationBar.setVisibility(0);
-    }
-
-    public void goBackward() {
-        if (this.currentPage > 0) {
-            this.wentBack = true;
-            this.currentPage--;
-            loadPage();
-        }
-    }
-
-    public void goForward() {
-        if (this.currentPage < this.pageCount - 1) {
-            this.currentPage++;
-            loadPage();
-        }
-    }
-
-    public void gotoPage(int p) {
-        if (p >= 0 && p < this.pageCount && p != this.currentPage) {
-            this.history.push(Integer.valueOf(this.currentPage));
-            this.currentPage = p;
-            loadPage();
-        }
-    }
-
-    public void gotoURI(String uri) {
-        try {
-            startActivity(new Intent("android.intent.action.VIEW", Uri.parse(uri)));
-        } catch (Throwable x) {
-            Log.e("MuPDF", x.getMessage());
-        }
-    }
+	public void gotoURI(String uri) {
+		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+		try {
+			startActivity(intent);
+		} catch (Throwable x) {
+			Log.e(APP, x.getMessage());
+		}
+	}
 }

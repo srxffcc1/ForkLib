@@ -3,52 +3,55 @@ package com.artifex.mupdf.mini;
 import android.app.ListActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class OutlineActivity extends ListActivity {
-    protected ArrayAdapter<Item> adapter;
+public class OutlineActivity extends ListActivity
+{
+	public static class Item implements Serializable {
+		public String title;
+		public int page;
+		public Item(String title, int page) {
+			this.title = title;
+			this.page = page;
+		}
+		public String toString() {
+			return title;
+		}
+	}
 
-    public static class Item implements Serializable {
-        public int page;
-        public String title;
+	protected ArrayAdapter<Item> adapter;
 
-        public Item(String title, int page) {
-            this.title = title;
-            this.page = page;
-        }
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        public String toString() {
-            return this.title;
-        }
-    }
+		adapter = new ArrayAdapter<Item>(this, android.R.layout.simple_list_item_1);
+		setListAdapter(adapter);
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(1);
-        getWindow().addFlags(1024);
-        this.adapter = new ArrayAdapter(this, 17367043);
-        setListAdapter(this.adapter);
-        Bundle bundle = getIntent().getExtras();
-        int currentPage = bundle.getInt("POSITION");
-        ArrayList<Item> outline = (ArrayList) bundle.getSerializable("OUTLINE");
-        int found = -1;
-        for (int i = 0; i < outline.size(); i++) {
-            Item item = (Item) outline.get(i);
-            if (found < 0 && item.page >= currentPage) {
-                found = i;
-            }
-            this.adapter.add(item);
-        }
-        if (found >= 0) {
-            setSelection(found);
-        }
-    }
+		Bundle bundle = getIntent().getExtras();
+		int currentPage = bundle.getInt("POSITION");
+		ArrayList<Item> outline = (ArrayList<Item>)bundle.getSerializable("OUTLINE");
+		int found = -1;
+		for (int i = 0; i < outline.size(); ++i) {
+			Item item = outline.get(i);
+			if (found < 0 && item.page >= currentPage)
+				found = i;
+			adapter.add(item);
+		}
+		if (found >= 0)
+			setSelection(found);
+	}
 
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        setResult(((Item) this.adapter.getItem(position)).page + 1);
-        finish();
-    }
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		Item item = adapter.getItem(position);
+		setResult(RESULT_FIRST_USER + item.page);
+		finish();
+	}
 }

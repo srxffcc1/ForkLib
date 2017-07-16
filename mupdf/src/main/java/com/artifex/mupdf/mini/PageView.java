@@ -1,295 +1,267 @@
 package com.artifex.mupdf.mini;
 
+import com.artifex.mupdf.fitz.*;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.view.ScaleGestureDetector.OnScaleGestureListener;
 import android.view.View;
 import android.widget.Scroller;
-import com.artifex.mupdf.fitz.Link;
-import com.artifex.mupdf.fitz.Rect;
 
-public class PageView extends View implements OnGestureListener, OnScaleGestureListener {
-    protected DocumentActivity actionListener;
-    protected Bitmap bitmap;
-    protected int bitmapH;
-    protected int bitmapW;
-    protected int canvasH;
-    protected int canvasW;
-    protected GestureDetector detector;
-    protected boolean error;
-    protected Paint errorPaint;
-    protected Path errorPath;
-    protected Paint linkPaint = new Paint();
-    protected Link[] links;
-    protected float maxScale = 2.0f;
-    protected float minScale = 1.0f;
-    protected ScaleGestureDetector scaleDetector;
-    protected int scrollX;
-    protected int scrollY;
-    protected Scroller scroller;
-    protected boolean showLinks;
-    protected float viewScale = 1.0f;
+public class PageView extends View implements
+	GestureDetector.OnGestureListener,
+	ScaleGestureDetector.OnScaleGestureListener
+{
+	protected DocumentActivity actionListener;
 
-    public PageView(Context ctx, AttributeSet atts) {
-        super(ctx, atts);
-        this.scroller = new Scroller(ctx);
-        this.detector = new GestureDetector(ctx, this);
-        this.scaleDetector = new ScaleGestureDetector(ctx, this);
-        this.linkPaint.setARGB(32, 0, 0, 255);
-        this.errorPaint = new Paint();
-        this.errorPaint.setARGB(255, 255, 80, 80);
-        this.errorPaint.setStrokeWidth(5.0f);
-        this.errorPaint.setStyle(Style.STROKE);
-        this.errorPath = new Path();
-        this.errorPath.moveTo(-100.0f, -100.0f);
-        this.errorPath.lineTo(100.0f, 100.0f);
-        this.errorPath.moveTo(100.0f, -100.0f);
-        this.errorPath.lineTo(-100.0f, 100.0f);
-    }
+	protected float viewScale, minScale, maxScale;
+	protected Bitmap bitmap;
+	protected int bitmapW, bitmapH;
+	protected int canvasW, canvasH;
+	protected int scrollX, scrollY;
+	protected Link[] links;
+	protected boolean showLinks;
 
-    public void setActionListener(DocumentActivity l) {
-        this.actionListener = l;
-    }
+	protected GestureDetector detector;
+	protected ScaleGestureDetector scaleDetector;
+	protected Scroller scroller;
+	protected boolean error;
+	protected Paint errorPaint;
+	protected Path errorPath;
+	protected Paint linkPaint;
 
-    public void setError() {
-        if (this.bitmap != null) {
-            this.bitmap.recycle();
-        }
-        this.error = true;
-        this.links = null;
-        this.bitmap = null;
-        invalidate();
-    }
+	public PageView(Context ctx, AttributeSet atts) {
+		super(ctx, atts);
 
-    public void setBitmap(Bitmap b, boolean wentBack, Link[] ls) {
-        int i;
-        int i2 = 0;
-        if (this.bitmap != null) {
-            this.bitmap.recycle();
-        }
-        this.error = false;
-        this.links = ls;
-        this.bitmap = b;
-        this.bitmapW = (int) (((float) this.bitmap.getWidth()) * this.viewScale);
-        this.bitmapH = (int) (((float) this.bitmap.getHeight()) * this.viewScale);
-        this.scroller.forceFinished(true);
-        if (wentBack) {
-            i = this.bitmapW - this.canvasW;
-        } else {
-            i = 0;
-        }
-        this.scrollX = i;
-        if (wentBack) {
-            i2 = this.bitmapH - this.canvasH;
-        }
-        this.scrollY = i2;
-        invalidate();
-    }
+		scroller = new Scroller(ctx);
+		detector = new GestureDetector(ctx, this);
+		scaleDetector = new ScaleGestureDetector(ctx, this);
 
-    public void onSizeChanged(int w, int h, int ow, int oh) {
-        this.canvasW = w;
-        this.canvasH = h;
-        this.actionListener.onPageViewSizeChanged(w, h);
-    }
+		viewScale = 1;
+		minScale = 1;
+		maxScale = 2;
 
-    public boolean onTouchEvent(MotionEvent event) {
-        this.detector.onTouchEvent(event);
-        this.scaleDetector.onTouchEvent(event);
-        return true;
-    }
+		linkPaint = new Paint();
+		linkPaint.setARGB(32, 0, 0, 255);
 
-    public boolean onDown(MotionEvent e) {
-        this.scroller.forceFinished(true);
-        return true;
-    }
+		errorPaint = new Paint();
+		errorPaint.setARGB(255, 255, 80, 80);
+		errorPaint.setStrokeWidth(5);
+		errorPaint.setStyle(Paint.Style.STROKE);
 
-    public void onShowPress(MotionEvent e) {
-    }
+		errorPath = new Path();
+		errorPath.moveTo(-100, -100);
+		errorPath.lineTo(100, 100);
+		errorPath.moveTo(100, -100);
+		errorPath.lineTo(-100, 100);
+	}
 
-    public void onLongPress(MotionEvent e) {
-        this.showLinks = !this.showLinks;
-        invalidate();
-    }
+	public void setActionListener(DocumentActivity l) {
+		actionListener = l;
+	}
 
-    public boolean onSingleTapUp(MotionEvent e) {
-        Rect b;
-        boolean foundLink = false;
-        float x = e.getX();
-        float y = e.getY();
-        if (this.showLinks && this.links != null) {
-            float mx = (x + (this.bitmapW <= this.canvasW ? (float) ((this.bitmapW - this.canvasW) / 2) : (float) this.scrollX)) / this.viewScale;
-            float my = (y + (this.bitmapH <= this.canvasH ? (float) ((this.bitmapH - this.canvasH) / 2) : (float) this.scrollY)) / this.viewScale;
-            Link[] linkArr = this.links;
-            int length = linkArr.length;
-            int i = 0;
-            while (i < length) {
-                Link link = linkArr[i];
-                b = link.bounds;
-                if (mx < b.x0 || mx > b.x1 || my < b.y0 || my > b.y1) {
-                    i++;
-                } else {
-                    if (link.uri != null) {
-                        this.actionListener.gotoURI(link.uri);
-                    } else if (link.page >= 0) {
-                        this.actionListener.gotoPage(link.page);
-                    }
-                    foundLink = true;
-                }
-            }
-        }
-        if (!foundLink) {
-            float a = (float) (this.canvasW / 3);
-            float bb = a * 2.0f;
-            if (x <= a) {
-                goBackward();
-            }
-            if (x >= bb) {
-                goForward();
-            }
-            if (x > a && x < bb) {
-                this.actionListener.toggleUI();
-            }
-        }
-        invalidate();
-        return true;
-    }
+	public void setError() {
+		if (bitmap != null)
+			bitmap.recycle();
+		error = true;
+		links = null;
+		bitmap = null;
+		invalidate();
+	}
 
-    public boolean onScroll(MotionEvent e1, MotionEvent e2, float dx, float dy) {
-        if (this.bitmap != null) {
-            this.scrollX += (int) dx;
-            this.scrollY += (int) dy;
-            this.scroller.forceFinished(true);
-            invalidate();
-        }
-        return true;
-    }
+	public void setBitmap(Bitmap b, boolean wentBack, Link[] ls) {
+		if (bitmap != null)
+			bitmap.recycle();
+		error = false;
+		links = ls;
+		bitmap = b;
+		bitmapW = (int)(bitmap.getWidth() * viewScale);
+		bitmapH = (int)(bitmap.getHeight() * viewScale);
+		scroller.forceFinished(true);
+		scrollX = wentBack ? bitmapW - canvasW : 0;
+		scrollY = wentBack ? bitmapH - canvasH : 0;
+		invalidate();
+	}
 
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float dx, float dy) {
-        if (this.bitmap != null) {
-            int maxY;
-            int maxX = this.bitmapW > this.canvasW ? this.bitmapW - this.canvasW : 0;
-            if (this.bitmapH > this.canvasH) {
-                maxY = this.bitmapH - this.canvasH;
-            } else {
-                maxY = 0;
-            }
-            this.scroller.forceFinished(true);
-            this.scroller.fling(this.scrollX, this.scrollY, (int) (-dx), (int) (-dy), 0, maxX, 0, maxY);
-            invalidate();
-        }
-        return true;
-    }
+	public void onSizeChanged(int w, int h, int ow, int oh) {
+		canvasW = w;
+		canvasH = h;
+		actionListener.onPageViewSizeChanged(w, h);
+	}
 
-    public boolean onScaleBegin(ScaleGestureDetector det) {
-        return true;
-    }
+	public boolean onTouchEvent(MotionEvent event) {
+		detector.onTouchEvent(event);
+		scaleDetector.onTouchEvent(event);
+		return true;
+	}
 
-    public boolean onScale(ScaleGestureDetector det) {
-        if (this.bitmap != null) {
-            float focusX = det.getFocusX();
-            float focusY = det.getFocusY();
-            float pageFocusX = (((float) this.scrollX) + focusX) / this.viewScale;
-            float pageFocusY = (((float) this.scrollY) + focusY) / this.viewScale;
-            this.viewScale *= det.getScaleFactor();
-            if (this.viewScale < this.minScale) {
-                this.viewScale = this.minScale;
-            }
-            if (this.viewScale > this.maxScale) {
-                this.viewScale = this.maxScale;
-            }
-            this.bitmapW = (int) (((float) this.bitmap.getWidth()) * this.viewScale);
-            this.bitmapH = (int) (((float) this.bitmap.getHeight()) * this.viewScale);
-            this.scrollX = (int) ((this.viewScale * pageFocusX) - focusX);
-            this.scrollY = (int) ((this.viewScale * pageFocusY) - focusY);
-            this.scroller.forceFinished(true);
-            invalidate();
-        }
-        return true;
-    }
+	public boolean onDown(MotionEvent e) {
+		scroller.forceFinished(true);
+		return true;
+	}
 
-    public void onScaleEnd(ScaleGestureDetector det) {
-    }
+	public void onShowPress(MotionEvent e) { }
 
-    public void goBackward() {
-        this.scroller.forceFinished(true);
-        if (this.scrollY > 0) {
-            this.scroller.startScroll(this.scrollX, this.scrollY, 0, ((-this.canvasH) * 9) / 10, 250);
-        } else if (this.scrollX <= 0) {
-            this.actionListener.goBackward();
-            return;
-        } else {
-            this.scroller.startScroll(this.scrollX, this.scrollY, ((-this.canvasW) * 9) / 10, (this.bitmapH - this.canvasH) - this.scrollY, 500);
-        }
-        invalidate();
-    }
+	public void onLongPress(MotionEvent e) {
+		showLinks = !showLinks;
+		invalidate();
+	}
 
-    public void goForward() {
-        this.scroller.forceFinished(true);
-        if (this.scrollY + this.canvasH < this.bitmapH) {
-            this.scroller.startScroll(this.scrollX, this.scrollY, 0, (this.canvasH * 9) / 10, 250);
-        } else if (this.scrollX + this.canvasW >= this.bitmapW) {
-            this.actionListener.goForward();
-            return;
-        } else {
-            this.scroller.startScroll(this.scrollX, this.scrollY, (this.canvasW * 9) / 10, -this.scrollY, 500);
-        }
-        invalidate();
-    }
+	public boolean onSingleTapUp(MotionEvent e) {
+		boolean foundLink = false;
+		float x = e.getX();
+		float y = e.getY();
+		if (showLinks && links != null) {
+			float dx = (bitmapW <= canvasW) ? (bitmapW - canvasW) / 2 : scrollX;
+			float dy = (bitmapH <= canvasH) ? (bitmapH - canvasH) / 2 : scrollY;
+			float mx = (x + dx) / viewScale;
+			float my = (y + dy) / viewScale;
+			for (Link link : links) {
+				Rect b = link.bounds;
+				if (mx >= b.x0 && mx <= b.x1 && my >= b.y0 && my <= b.y1) {
+					if (link.uri != null)
+						actionListener.gotoURI(link.uri);
+					else if (link.page >= 0)
+						actionListener.gotoPage(link.page);
+					foundLink = true;
+					break;
+				}
+			}
+		}
+		if (!foundLink) {
+			float a = canvasW / 3;
+			float b = a * 2;
+			if (x <= a) goBackward();
+			if (x >= b) goForward();
+			if (x > a && x < b) actionListener.toggleUI();
+		}
+		invalidate();
+		return true;
+	}
 
-    public void onDraw(Canvas canvas) {
-        if (this.bitmap != null) {
-            int x;
-            int y;
-            if (this.scroller.computeScrollOffset()) {
-                this.scrollX = this.scroller.getCurrX();
-                this.scrollY = this.scroller.getCurrY();
-                invalidate();
-            }
-            if (this.bitmapW <= this.canvasW) {
-                this.scrollX = 0;
-                x = (this.canvasW - this.bitmapW) / 2;
-            } else {
-                if (this.scrollX < 0) {
-                    this.scrollX = 0;
-                }
-                if (this.scrollX > this.bitmapW - this.canvasW) {
-                    this.scrollX = this.bitmapW - this.canvasW;
-                }
-                x = -this.scrollX;
-            }
-            if (this.bitmapH <= this.canvasH) {
-                this.scrollY = 0;
-                y = (this.canvasH - this.bitmapH) / 2;
-            } else {
-                if (this.scrollY < 0) {
-                    this.scrollY = 0;
-                }
-                if (this.scrollY > this.bitmapH - this.canvasH) {
-                    this.scrollY = this.bitmapH - this.canvasH;
-                }
-                y = -this.scrollY;
-            }
-            canvas.translate((float) x, (float) y);
-            canvas.scale(this.viewScale, this.viewScale);
-            canvas.drawBitmap(this.bitmap, 0.0f, 0.0f, null);
-            if (this.showLinks && this.links != null) {
-                for (Link link : this.links) {
-                    Rect b = link.bounds;
-                    canvas.drawRect(b.x0, b.y0, b.x1, b.y1, this.linkPaint);
-                }
-            }
-        } else if (this.error) {
-            canvas.translate((float) (this.canvasW / 2), (float) (this.canvasH / 2));
-            canvas.drawPath(this.errorPath, this.errorPaint);
-        }
-    }
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float dx, float dy) {
+		if (bitmap != null) {
+			scrollX += (int)dx;
+			scrollY += (int)dy;
+			scroller.forceFinished(true);
+			invalidate();
+		}
+		return true;
+	}
+
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float dx, float dy) {
+		if (bitmap != null) {
+			int maxX = bitmapW > canvasW ? bitmapW - canvasW : 0;
+			int maxY = bitmapH > canvasH ? bitmapH - canvasH : 0;
+			scroller.forceFinished(true);
+			scroller.fling(scrollX, scrollY, (int)-dx, (int)-dy, 0, maxX, 0, maxY);
+			invalidate();
+		}
+		return true;
+	}
+
+	public boolean onScaleBegin(ScaleGestureDetector det) { return true; }
+
+	public boolean onScale(ScaleGestureDetector det) {
+		if (bitmap != null) {
+			float focusX = det.getFocusX();
+			float focusY = det.getFocusY();
+			float scaleFactor = det.getScaleFactor();
+			float pageFocusX = (focusX + scrollX) / viewScale;
+			float pageFocusY = (focusY + scrollY) / viewScale;
+			viewScale *= scaleFactor;
+			if (viewScale < minScale) viewScale = minScale;
+			if (viewScale > maxScale) viewScale = maxScale;
+			bitmapW = (int)(bitmap.getWidth() * viewScale);
+			bitmapH = (int)(bitmap.getHeight() * viewScale);
+			scrollX = (int)(pageFocusX * viewScale - focusX);
+			scrollY = (int)(pageFocusY * viewScale - focusY);
+			scroller.forceFinished(true);
+			invalidate();
+		}
+		return true;
+	}
+
+	public void onScaleEnd(ScaleGestureDetector det) { }
+
+	public void goBackward() {
+		scroller.forceFinished(true);
+		if (scrollY <= 0) {
+			if (scrollX <= 0) {
+				actionListener.goBackward();
+				return;
+			}
+			scroller.startScroll(scrollX, scrollY, -canvasW * 9 / 10, bitmapH - canvasH - scrollY, 500);
+		} else {
+			scroller.startScroll(scrollX, scrollY, 0, -canvasH * 9 / 10, 250);
+		}
+		invalidate();
+	}
+
+	public void goForward() {
+		scroller.forceFinished(true);
+		if (scrollY + canvasH >= bitmapH) {
+			if (scrollX + canvasW >= bitmapW) {
+				actionListener.goForward();
+				return;
+			}
+			scroller.startScroll(scrollX, scrollY, canvasW * 9 / 10, -scrollY, 500);
+		} else {
+			scroller.startScroll(scrollX, scrollY, 0, canvasH * 9 / 10, 250);
+		}
+		invalidate();
+	}
+
+	public void onDraw(Canvas canvas) {
+		int x, y;
+
+		if (bitmap == null) {
+			if (error) {
+				canvas.translate(canvasW / 2, canvasH / 2);
+				canvas.drawPath(errorPath, errorPaint);
+			}
+			return;
+		}
+
+		if (scroller.computeScrollOffset()) {
+			scrollX = scroller.getCurrX();
+			scrollY = scroller.getCurrY();
+			invalidate(); /* keep animating */
+		}
+
+		if (bitmapW <= canvasW) {
+			scrollX = 0;
+			x = (canvasW - bitmapW) / 2;
+		} else {
+			if (scrollX < 0) scrollX = 0;
+			if (scrollX > bitmapW - canvasW) scrollX = bitmapW - canvasW;
+			x = -scrollX;
+		}
+
+		if (bitmapH <= canvasH) {
+			scrollY = 0;
+			y = (canvasH - bitmapH) / 2;
+		} else {
+			if (scrollY < 0) scrollY = 0;
+			if (scrollY > bitmapH - canvasH) scrollY = bitmapH - canvasH;
+			y = -scrollY;
+		}
+
+		canvas.translate(x, y);
+		canvas.scale(viewScale, viewScale);
+		canvas.drawBitmap(bitmap, 0, 0, null);
+
+		if (showLinks && links != null) {
+			for (Link link : links) {
+				Rect b = link.bounds;
+				canvas.drawRect(b.x0, b.y0, b.x1, b.y1, linkPaint);
+			}
+		}
+	}
 }

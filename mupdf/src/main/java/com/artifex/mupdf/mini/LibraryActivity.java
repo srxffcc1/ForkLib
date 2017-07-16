@@ -1,5 +1,6 @@
 package com.artifex.mupdf.mini;
 
+import android.app.Activity;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.net.Uri;
@@ -8,151 +9,154 @@ import android.os.Environment;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
 import java.io.File;
 import java.io.FileFilter;
 import java.util.Comparator;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class LibraryActivity extends ListActivity {
-    protected final int UPDATE_DELAY = 5000;
-    protected ArrayAdapter<Item> adapter;
-    protected File currentDirectory;
-    protected File topDirectory;
-    protected Timer updateTimer;
+public class LibraryActivity extends ListActivity
+{
+	protected final int UPDATE_DELAY = 5000;
 
-    protected static class Item {
-        public File file;
-        public String string;
+	protected File topDirectory, currentDirectory;
+	protected ArrayAdapter<Item> adapter;
+	protected Timer updateTimer;
 
-        public Item(File file) {
-            this.file = file;
-            if (file.isDirectory()) {
-                this.string = file.getName() + "/";
-            } else {
-                this.string = file.getName();
-            }
-        }
+	protected static class Item {
+		public File file;
+		public String string;
+		public Item(File file) {
+			this.file = file;
+			if (file.isDirectory())
+				string = file.getName() + "/";
+			else
+				string = file.getName();
+		}
+		public Item(File file, String string) {
+			this.file = file;
+			this.string = string;
+		}
+		public String toString() {
+			return string;
+		}
+	}
 
-        public Item(File file, String string) {
-            this.file = file;
-            this.string = string;
-        }
+	protected boolean isExternalStorageReadable() {
+		String state = Environment.getExternalStorageState();
+		if (Environment.MEDIA_MOUNTED.equals(state) || Environment.MEDIA_MOUNTED_READ_ONLY.equals(state))
+			return true;
+		return false;
+	}
 
-        public String toString() {
-            return this.string;
-        }
-    }
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
 
-    protected boolean isExternalStorageReadable() {
-        String state = Environment.getExternalStorageState();
-        if ("mounted".equals(state) || "mounted_ro".equals(state)) {
-            return true;
-        }
-        return false;
-    }
+		/* Hide 'home' icon on old themes */
+		getActionBar().setDisplayShowHomeEnabled(false);
 
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        getActionBar().setDisplayShowHomeEnabled(false);
-        this.topDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
-        this.currentDirectory = this.topDirectory;
-        this.adapter = new ArrayAdapter(this, 17367043);
-        setListAdapter(this.adapter);
-    }
+		topDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+		currentDirectory = topDirectory;
 
-    public void onResume() {
-        super.onResume();
-        TimerTask updateTask = new TimerTask() {
-            public void run() {
-                LibraryActivity.this.runOnUiThread(new Runnable() {
-                    public void run() {
-                        LibraryActivity.this.updateFileList();
-                    }
-                });
-            }
-        };
-        this.updateTimer = new Timer();
-        this.updateTimer.scheduleAtFixedRate(updateTask, 0, 5000);
-    }
+		adapter = new ArrayAdapter<Item>(this, android.R.layout.simple_list_item_1);
+		setListAdapter(adapter);
+	}
 
-    public void onPause() {
-        super.onPause();
-        this.updateTimer.cancel();
-        this.updateTimer = null;
-    }
+	public void onResume() {
+		super.onResume();
+		TimerTask updateTask = new TimerTask() {
+			public void run() {
+				runOnUiThread(new Runnable() {
+					public void run() {
+						updateFileList();
+					}
+				});
+			}
+		};
+		updateTimer = new Timer();
+		updateTimer.scheduleAtFixedRate(updateTask, 0, UPDATE_DELAY);
+	}
 
-    protected void updateFileList() {
-        this.adapter.clear();
-        if (!isExternalStorageReadable()) {
-            setTitle(R.string.app_name);
-            this.adapter.add(new Item(this.topDirectory, getString(R.string.library_no_external_storage)));
-        } else if (this.currentDirectory.isDirectory()) {
-            String curPath = this.currentDirectory.getAbsolutePath();
-            String topPath = this.topDirectory.getParentFile().getAbsolutePath();
-            if (curPath.startsWith(topPath)) {
-                curPath = curPath.substring(topPath.length() + 1);
-            }
-            setTitle(curPath + "/");
-            File parent = this.currentDirectory.getParentFile();
-            if (!(parent == null || this.currentDirectory.equals(this.topDirectory))) {
-                this.adapter.add(new Item(parent, "../"));
-            }
-            File[] files = this.currentDirectory.listFiles(new FileFilter() {
-                public boolean accept(File file) {
-                    if (file.isDirectory()) {
-                        return true;
-                    }
-                    String suffix = file.getName().toLowerCase();
-                    if (suffix.endsWith(".pdf") || suffix.endsWith(".xps") || suffix.endsWith(".cbz") || suffix.endsWith(".epub") || suffix.endsWith(".fb2")) {
-                        return true;
-                    }
-                    return false;
-                }
-            });
-            if (files == null) {
-                this.adapter.add(new Item(this.topDirectory, getString(R.string.library_permission_denied)));
-            } else {
-                for (File file : files) {
-                    this.adapter.add(new Item(file));
-                }
-            }
-            this.adapter.sort(new Comparator<Item>() {
-                public int compare(Item a, Item b) {
-                    boolean ad = a.file.isDirectory();
-                    boolean bd = b.file.isDirectory();
-                    if (ad && !bd) {
-                        return -1;
-                    }
-                    if (bd && !ad) {
-                        return 1;
-                    }
-                    if (a.string.equals("../")) {
-                        return -1;
-                    }
-                    if (b.string.equals("../")) {
-                        return 1;
-                    }
-                    return a.string.compareTo(b.string);
-                }
-            });
-        } else {
-            setTitle(R.string.app_name);
-            this.adapter.add(new Item(this.topDirectory, getString(R.string.library_not_a_directory)));
-        }
-    }
+	public void onPause() {
+		super.onPause();
+		updateTimer.cancel();
+		updateTimer = null;
+	}
 
-    protected void onListItemClick(ListView l, View v, int position, long id) {
-        Item item = (Item) this.adapter.getItem(position);
-        if (item.file.isDirectory()) {
-            this.currentDirectory = item.file;
-            updateFileList();
-        } else if (item.file.isFile()) {
-            Intent intent = new Intent(this, DocumentActivity.class);
-            intent.addFlags(524288);
-            intent.setAction("android.intent.action.VIEW");
-            intent.setData(Uri.fromFile(item.file));
-            startActivity(intent);
-        }
-    }
+	protected void updateFileList() {
+		adapter.clear();
+
+		if (!isExternalStorageReadable()) {
+			setTitle(R.string.app_name);
+			adapter.add(new Item(topDirectory, getString(R.string.library_no_external_storage)));
+			return;
+		}
+
+		if (!currentDirectory.isDirectory()) {
+			setTitle(R.string.app_name);
+			adapter.add(new Item(topDirectory, getString(R.string.library_not_a_directory)));
+			return;
+		}
+
+		String curPath = currentDirectory.getAbsolutePath();
+		String topPath = topDirectory.getParentFile().getAbsolutePath();
+		if (curPath.startsWith(topPath))
+			curPath = curPath.substring(topPath.length() + 1); /* +1 for trailing slash */
+		setTitle(curPath + "/");
+
+		File parent = currentDirectory.getParentFile();
+		if (parent != null && !currentDirectory.equals(topDirectory))
+			adapter.add(new Item(parent, "../"));
+
+		File[] files = currentDirectory.listFiles(new FileFilter() {
+			public boolean accept(File file) {
+				if (file.isDirectory()) return true;
+				String suffix = file.getName().toLowerCase();
+				if (suffix.endsWith(".pdf")) return true;
+				if (suffix.endsWith(".xps")) return true;
+				if (suffix.endsWith(".cbz")) return true;
+				if (suffix.endsWith(".epub")) return true;
+				if (suffix.endsWith(".fb2")) return true;
+				return false;
+			}
+		});
+
+		if (files == null)
+			adapter.add(new Item(topDirectory, getString(R.string.library_permission_denied)));
+		else
+			for (File file : files)
+				adapter.add(new Item(file));
+
+		adapter.sort(new Comparator<Item>() {
+			public int compare(Item a, Item b) {
+				boolean ad = a.file.isDirectory();
+				boolean bd = b.file.isDirectory();
+				if (ad && !bd) return -1;
+				if (bd && !ad) return 1;
+				if (a.string.equals("../")) return -1;
+				if (b.string.equals("../")) return 1;
+				return a.string.compareTo(b.string);
+			}
+		});
+	}
+
+	protected void onListItemClick(ListView l, View v, int position, long id) {
+		Item item = adapter.getItem(position);
+
+		if (item.file.isDirectory()) {
+			currentDirectory = item.file;
+			updateFileList();
+			return;
+		}
+
+		if (!item.file.isFile())
+			return;
+
+		Intent intent = new Intent(this, DocumentActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET); /* launch as a new document */
+		intent.setAction(Intent.ACTION_VIEW);
+		intent.setData(Uri.fromFile(item.file));
+		startActivity(intent);
+	}
 }
