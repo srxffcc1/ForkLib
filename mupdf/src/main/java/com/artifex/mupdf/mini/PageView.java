@@ -1,24 +1,28 @@
 package com.artifex.mupdf.mini;
 
-import com.artifex.mupdf.fitz.*;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Scroller;
 
+import com.artifex.mupdf.fitz.Link;
+import com.artifex.mupdf.fitz.Rect;
+
+import static android.content.ContentValues.TAG;
+
 public class PageView extends View implements
 	GestureDetector.OnGestureListener,
 	ScaleGestureDetector.OnScaleGestureListener
 {
-	protected DocumentActivity actionListener;
+	protected PageActionListener actionListener;
 
 	protected float viewScale, minScale, maxScale;
 	protected Bitmap bitmap;
@@ -62,7 +66,7 @@ public class PageView extends View implements
 		errorPath.lineTo(-100, 100);
 	}
 
-	public void setActionListener(DocumentActivity l) {
+	public void setActionListener(PageActionListener l) {
 		actionListener = l;
 	}
 
@@ -162,6 +166,24 @@ public class PageView extends View implements
 			scroller.forceFinished(true);
 			scroller.fling(scrollX, scrollY, (int)-dx, (int)-dy, 0, maxX, 0, maxY);
 			invalidate();
+		}
+		Log.i(TAG, "onFling   放大倍数:"+viewScale);
+		if(viewScale==1){
+			if(e1.getX()-e2.getX()>100&&Math.abs(dx)>200){
+				Log.i(TAG, "onFling   向左滑动");
+				goForward();
+				return true;
+			}else if(e1.getX()-e2.getX()<-100&&Math.abs(dx)>200){
+				Log.i(TAG, "onFling   向右滑动");
+				goBackward();
+				return true;
+			}else if(e1.getY()-e2.getY()>10&&Math.abs(dy)>50){
+				Log.i(TAG, "onFling   向上滑动  上位移="+(e1.getY()-e2.getY()));
+				return true;
+			}else if(e1.getY()-e2.getY()<-10&&Math.abs(dy)>50){
+				Log.i(TAG, "onFling   向下滑动    下位移"+(e1.getY()-e2.getY()));
+				return true;
+			}
 		}
 		return true;
 	}
@@ -264,4 +286,51 @@ public class PageView extends View implements
 			}
 		}
 	}
+	public interface PageActionListener{
+
+	void onPageViewSizeChanged(int w, int h);
+
+	void goForward();
+
+	void goBackward();
+
+	void toggleUI();
+
+	void gotoURI(String uri);
+
+	void gotoPage(int page);
 }
+	public class PageActionAdapter implements  PageActionListener{
+
+		@Override
+		public void onPageViewSizeChanged(int w, int h) {
+
+		}
+
+		@Override
+		public void goForward() {
+
+		}
+
+		@Override
+		public void goBackward() {
+
+		}
+
+		@Override
+		public void toggleUI() {
+
+		}
+
+		@Override
+		public void gotoURI(String uri) {
+
+		}
+
+		@Override
+		public void gotoPage(int page) {
+
+		}
+	}
+}
+

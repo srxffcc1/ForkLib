@@ -3,10 +3,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <application android:icon="@drawable/ic_launcher" android:label="@string/app_name">
         <activity android:configChanges="keyboardHidden|orientation|screenSize" android:name=".LibraryActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
         <activity android:configChanges="keyboardHidden|orientation|screenSize" android:label="@string/app_name" android:name=".DocumentActivity">
             <intent-filter>

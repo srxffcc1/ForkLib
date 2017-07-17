@@ -32,8 +32,7 @@ import com.artifex.mupdf.fitz.android.AndroidDrawDevice;
 import java.util.ArrayList;
 import java.util.Stack;
 
-public class DocumentActivity extends Activity
-{
+public class DocumentActivity extends Activity implements PageView.PageActionListener {
 	private final String APP = "MuPDF";
 
 	public final int NAVIGATE_REQUEST = 1;
@@ -252,14 +251,14 @@ public class DocumentActivity extends Activity
 		editor.commit();
 	}
 
-	public void onBackPressed() {
-		if (history.empty()) {
-			super.onBackPressed();
-		} else {
-			currentPage = history.pop();
-			loadPage();
-		}
-	}
+//	public void onBackPressed() {
+//		if (history.empty()) {
+//			super.onBackPressed();
+//		} else {
+//			currentPage = history.pop();
+//			loadPage();
+//		}
+//	}
 
 	public void onActivityResult(int request, int result, Intent data) {
 		if (request == NAVIGATE_REQUEST && result >= RESULT_FIRST_USER)

@@ -9,7 +9,8 @@
 //include ':common'
 //include ':document-viewer'
 //include ':playerlib'
-include ':playerdisk'
+//include ':playerdisk'
 //include ':droidplugin'
 //include ':rtspvideo'
+include ':unzip'
 
