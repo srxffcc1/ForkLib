@@ -168,7 +168,7 @@ public class PageView extends View implements
 			invalidate();
 		}
 		Log.i(TAG, "onFling   放大倍数:"+viewScale);
-		if(viewScale==1){
+		if(viewScale<=1.01){
 			if(e1.getX()-e2.getX()>100&&Math.abs(dx)>200){
 				Log.i(TAG, "onFling   向左滑动");
 				goForward();
