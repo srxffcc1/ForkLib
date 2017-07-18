@@ -1,12 +1,12 @@
 <resources>
-    <style name="AppTheme.Base" parent="Theme.AppCompat.Light"> </style>
+    <style name="RecordAppTheme.Base" parent="Theme.AppCompat.Light.DarkActionBar"> </style>
 
-    <style name="AppTheme" parent="AppTheme.Base">
+    <style name="RecordAppTheme" parent="RecordAppTheme.Base">
         <item name="colorPrimary">@color/primary</item>
         <item name="colorPrimaryDark">@color/primary_dark</item>
 
-        <item name="android:windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
 </resources>
