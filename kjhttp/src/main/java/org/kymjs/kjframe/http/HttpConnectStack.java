@@ -132,6 +132,9 @@ public class HttpConnectStack implements HttpStack {
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         int timeoutMs = request.getTimeoutMs();
+        if(HttpConfig.sCookie!=null&&!HttpConfig.sCookie.equals("")){
+            connection.setRequestProperty("cookie", "JSESSIONID=" + HttpConfig.sCookie);
+        }
         connection.setConnectTimeout(timeoutMs);
         connection.setReadTimeout(timeoutMs);
         connection.setUseCaches(false);
