@@ -12,5 +12,5 @@
 //include ':playerdisk'
 //include ':droidplugin'
 //include ':rtspvideo'
-include ':droidplugin'
+include ':common'
 

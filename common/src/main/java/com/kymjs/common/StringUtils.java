@@ -241,12 +241,15 @@ public class StringUtils {
             result = result + tmp2[j];
         }
         if (s.length() == 2) {
-            if (s.substring(1, 2).equals("0")) {
-                result = result.substring(2, 4);
-            } else {
-                result = result.substring(2, result.length());
+            if(s.startsWith("1")){
+                result=result.substring(2,result.length());
             }
 
+        }
+        if(s.length()>1){
+            if(s.endsWith("0")){
+                result = result.substring(0, result.length()-2);
+            }
         }
         return result;
     }
