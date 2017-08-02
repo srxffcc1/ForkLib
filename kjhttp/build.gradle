@@ -35,3 +35,6 @@ tasks.withType(Javadoc) { //防止doc错误
     options.addStringOption('encoding', 'UTF-8')
     options.addStringOption('charSet', 'UTF-8')
 }
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
