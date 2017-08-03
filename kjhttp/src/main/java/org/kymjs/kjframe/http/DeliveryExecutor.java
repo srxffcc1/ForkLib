@@ -94,6 +94,7 @@ public class DeliveryExecutor implements Delivery {
             }
 
             if (mResponse.isSuccess()) {
+                System.out.println("start divide");
                 mRequest.deliverResponse(mResponse.headers, mResponse.result);
             } else {
                 mRequest.deliverError(mResponse.error);

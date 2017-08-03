@@ -80,11 +80,15 @@ public class HttpConnectStack implements HttpStack {
             url = rewritten;
         }
         URL parsedUrl = new URL(url);
+        System.out.println("Url:"+url);
+        System.out.println("start connect");
         HttpURLConnection connection = openConnection(parsedUrl, request);
         for (String headerName : map.keySet()) {
             connection.addRequestProperty(headerName, map.get(headerName));
         }
         setConnectionParametersForRequest(connection, request);
+//        connection.connect();
+        System.out.println("http connected");
         KJHttpResponse response = responseFromConnection(connection);
         return response;
     }
@@ -134,6 +138,7 @@ public class HttpConnectStack implements HttpStack {
         int timeoutMs = request.getTimeoutMs();
         if(HttpConfig.sCookie!=null&&!HttpConfig.sCookie.equals("")){
             connection.setRequestProperty("cookie", "JSESSIONID=" + HttpConfig.sCookie);
+            connection.setRequestProperty("cookie", "PHPSESSID=" + HttpConfig.sCookie);
         }
         connection.setConnectTimeout(timeoutMs);
         connection.setReadTimeout(timeoutMs);

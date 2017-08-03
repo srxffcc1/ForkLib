@@ -19,7 +19,7 @@ package org.kymjs.kjframe.http;
 import org.kymjs.kjframe.utils.KJLoger;
 
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.text.DateFormat;
@@ -74,7 +74,9 @@ public class Network {
                         responseContents = ((FileRequest) request)
                                 .handleResponse(httpResponse);
                     } else {
+                        System.out.println("start tobyte");
                         responseContents = entityToBytes(httpResponse);
+                        System.out.println("end tobyte");
                     }
                 } else {
                     responseContents = new byte[0];
@@ -137,36 +139,44 @@ public class Network {
     }
 
     /**
-     * 把HttpEntry转换为byte[]
+     * 把HttpEntry转换为byte[] 2017-8-2 优化为StringBuilder
      *
      * @throws IOException
      * @throws KJHttpException
      */
     private byte[] entityToBytes(KJHttpResponse kjHttpResponse) throws IOException,
             KJHttpException {
-        PoolingByteArrayOutputStream bytes = new PoolingByteArrayOutputStream(
-                ByteArrayPool.get(), (int) kjHttpResponse.getContentLength());
-        byte[] buffer = null;
+//        PoolingByteArrayOutputStream bytes = new PoolingByteArrayOutputStream(
+//                ByteArrayPool.get(), (int) kjHttpResponse.getContentLength());
+
+        StringBuilder jsonResults = new StringBuilder();
         try {
-            InputStream in = kjHttpResponse.getContentStream();
+            InputStreamReader in = new InputStreamReader(kjHttpResponse.getContentStream());
             if (in == null) {
                 throw new KJHttpException("server error");
             }
-            buffer = ByteArrayPool.get().getBuf(1024);
-            int count;
-            while ((count = in.read(buffer)) != -1) {
-                bytes.write(buffer, 0, count);
+            int read;
+            char[] buff = new char[512];
+            while ((read = in.read(buff)) != -1) {
+                jsonResults.append(buff, 0, read);
             }
-            return bytes.toByteArray();
+
+//        byte[] buffer = null;
+//            buffer = ByteArrayPool.get().getBuf(1024);
+//            int count;
+//            while ((count = in.read(buffer)) != -1) {
+//                bytes.write(buffer, 0, count);
+//            }
+            return jsonResults.toString().getBytes();
         } finally {
-            try {
-//                entity.consumeContent();
-                kjHttpResponse.getContentStream().close();
-            } catch (IOException e) {
-                KJLoger.debug("Error occured when calling consumingContent");
-            }
-            ByteArrayPool.get().returnBuf(buffer);
-            bytes.close();
+//            try {
+////                entity.consumeContent();
+//                kjHttpResponse.getContentStream().close();
+//            } catch (IOException e) {
+//                KJLoger.debug("Error occured when calling consumingContent");
+//            }
+//            ByteArrayPool.get().returnBuf(buffer);
+//            bytes.close();
         }
     }
 }

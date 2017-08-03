@@ -208,7 +208,13 @@ public class KJHttp {
     public Request<byte[]> get(String url, HttpParams params, boolean useCache,
                                HttpCallBack callback) {
         if (params != null) {
-            url += params.getUrlParams();
+            if(url.split("\\?").length>1){
+                url=url.split("\\?")[0]+params.getUrlParams(url.split("\\?")[1]);
+            }else{
+                url += params.getUrlParams("");
+            }
+//            url=url+"?";
+
         }
         Request<byte[]> request = new FormRequest(HttpMethod.GET, url, params,
                 callback);
@@ -239,11 +245,23 @@ public class KJHttp {
      */
     public Request<byte[]> post(String url, HttpParams params,
                                 boolean useCache, HttpCallBack callback) {
-        Request<byte[]> request = new FormRequest(HttpMethod.POST, url, params,
-                callback);
-        request.setShouldCache(useCache);
-        doRequest(request);
-        return request;
+
+        if(params.getLength()>9||params.isHasFile()){//当参数大于9或者含有文件时采取post请求
+            if(url.split("\\?").length>1){
+                params.getUrlParams(url.split("\\?")[1]);
+                url=url.split("\\?")[0];
+            }
+            Request<byte[]> request= new FormRequest(HttpMethod.GET, url, params,
+                    callback);
+            request.setShouldCache(useCache);
+            doRequest(request);
+            return request;
+
+        }else{
+            return get(url,params,useCache,callback);
+        }
+
+
     }
 
     /**
@@ -386,7 +404,7 @@ public class KJHttp {
      */
     public byte[] getCache(String url, HttpParams params) {
         if (params != null) {
-            url += params.getUrlParams();
+            url += params.getUrlParams("");
         }
         return getCache(url);
     }
@@ -399,7 +417,7 @@ public class KJHttp {
      */
     public String getStringCache(String url, HttpParams params) {
         if (params != null) {
-            url += params.getUrlParams();
+            url += params.getUrlParams("");
         }
         return new String(getCache(url));
     }

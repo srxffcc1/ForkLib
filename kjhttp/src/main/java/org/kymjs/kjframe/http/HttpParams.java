@@ -16,6 +16,7 @@
 
 package org.kymjs.kjframe.http;
 
+import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -80,6 +81,13 @@ public class HttpParams implements Serializable {
         this.mBoundary = generateBoundary();
         mHeaders.put("cookie", HttpConfig.sCookie);
     }
+    public int getLength(){
+        return urlParams.size();
+    }
+
+    public boolean isHasFile() {
+        return hasFile;
+    }
 
     /**
      * 生成分隔符
@@ -101,7 +109,7 @@ public class HttpParams implements Serializable {
         mHeaders.put(key, value);
     }
 
-    public void put(final OutputStream outstream,final String key, final int value) {
+    private void put(final OutputStream outstream,final String key, final int value) {
         this.put(outstream,key, value + "");
     }
     public void put(final String key, final int value) {
@@ -115,7 +123,7 @@ public class HttpParams implements Serializable {
     /**
      * 添加文本参数 写入流
      */
-    public void put(final OutputStream outstream,final String key, final String value) {
+    private void put(final OutputStream outstream,final String key, final String value) {
 //        urlParams.put(key, value);
         writeToOutputStream(outstream,key, value.getBytes(), TYPE_TEXT_CHARSET,
                 BIT_ENCODING, "");
@@ -139,7 +147,7 @@ public class HttpParams implements Serializable {
     /**
      * 添加二进制参数, 例如Bitmap的字节流参数 写入流
      */
-    public void put(final OutputStream outstream,String paramName, final byte[] rawData) {
+    private void put(final OutputStream outstream,String paramName, final byte[] rawData) {
         hasFile = true;
         writeToOutputStream(outstream,paramName, rawData, TYPE_OCTET_STREAM,
                 BINARY_ENCODING, "KJFrameFile");
@@ -156,7 +164,7 @@ public class HttpParams implements Serializable {
     /**
      * 添加文件参数,可以实现文件上传功能 写入流
      */
-    public void put(final OutputStream outstream,final String key, final File file) {
+    private void put(final OutputStream outstream,final String key, final File file) {
 
         hasFile = true;
         try {
@@ -198,7 +206,6 @@ public class HttpParams implements Serializable {
      * 添加文件参数,可以实现文件上传功能
      */
     public void put(final String key, final File file) {
-
         hasFile = true;
         urlParams.put(key, file);
     }
@@ -290,8 +297,8 @@ public class HttpParams implements Serializable {
             outstream.write(endString.getBytes());
             //
 //            outstream.write(outstream.toByteArray());
-        } else if (!isEmpty(getUrlParams())) {
-            outstream.write(getUrlParams().substring(1).getBytes());
+        } else if (!isEmpty(getUrlParams(""))) {
+            outstream.write(getUrlParams("").substring(1).getBytes());
         }
     }
     public static boolean isEmpty(CharSequence input) {
@@ -318,8 +325,14 @@ public class HttpParams implements Serializable {
 //        return new ByteArrayInputStream(outstream.toByteArray());
 //    }
 
-    public StringBuilder getUrlParams() {
+    public StringBuilder getUrlParams(String split) {//增强参数设置 帮助检验get请求里的多余参数
         StringBuilder result = new StringBuilder();
+        if(!"".equals(split)){
+            String[] splits=split.split("&");
+            for (int i = 0; i <splits.length ; i++) {
+                urlParams.put(splits[i].split("=")[0],splits[i].split("=")[1]);
+            }
+        }
         boolean isFirst = true;
         for (ConcurrentHashMap.Entry<String, Object> entry : urlParams
                 .entrySet()) {
@@ -332,7 +345,12 @@ public class HttpParams implements Serializable {
                 }
                 result.append(entry.getKey());
                 result.append("=");
-                result.append(entry.getValue());
+                if((entry.getValue().toString()).getBytes().length!=entry.getValue().toString().length()){//说明有中文
+                    result.append(Uri.encode(entry.getValue().toString()));
+                }else{
+                    result.append(entry.getValue());
+                }
+
             }
 
         }

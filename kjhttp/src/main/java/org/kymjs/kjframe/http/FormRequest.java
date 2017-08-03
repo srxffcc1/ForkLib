@@ -47,7 +47,7 @@ public class FormRequest extends Request<byte[]> {
     @Override
     public String getCacheKey() {
         if (getMethod() == HttpMethod.POST) {
-            return getUrl() + mParams.getUrlParams();
+            return getUrl() + mParams.getUrlParams("");
         } else {
             return getUrl();
         }
