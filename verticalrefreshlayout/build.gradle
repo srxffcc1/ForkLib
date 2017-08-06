@@ -25,7 +25,7 @@ dependencies {
 }
 publish {
     userOrg = 'srxffcc1'//bintray网的用户id
-    groupId = 'com.srxlike.verticalrefreshlayout'//自己定义一个唯一的java的包名
+    groupId = 'com.sixdown.verticalrefreshlayout'//自己定义一个唯一的java的包名
     artifactId = 'verticalrefreshlayout'//在bintray上的package名字
     publishVersion = '1.0.0'//版本号
     desc = 'just upload this and ?'//描述，不重要
