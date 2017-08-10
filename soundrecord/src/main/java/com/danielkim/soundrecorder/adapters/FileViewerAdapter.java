@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.text.format.DateUtils;
 
 import com.danielkim.soundrecorder.DBHelper;
 import com.danielkim.soundrecorder.R;
@@ -26,9 +26,8 @@ import com.danielkim.soundrecorder.fragments.PlaybackFragment;
 import com.danielkim.soundrecorder.listeners.OnDatabaseChangedListener;
 
 import java.io.File;
-import java.util.Locale;
-import java.util.concurrent.TimeUnit;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Daniel on 12/29/2014.
@@ -234,7 +233,7 @@ public class FileViewerAdapter extends RecyclerView.Adapter<FileViewerAdapter.Re
         Intent shareIntent = new Intent();
         shareIntent.setAction(Intent.ACTION_SEND);
         shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(new File(getItem(position).getFilePath())));
-        shareIntent.setType("audio/mp4");
+        shareIntent.setType("audio/mp3");
         mContext.startActivity(Intent.createChooser(shareIntent, mContext.getText(R.string.send_to)));
     }
 
@@ -253,7 +252,7 @@ public class FileViewerAdapter extends RecyclerView.Adapter<FileViewerAdapter.Re
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         try {
-                            String value = input.getText().toString().trim() + ".mp4";
+                            String value = input.getText().toString().trim() + ".mp3";
                             rename(position, value);
 
                         } catch (Exception e) {

@@ -109,7 +109,7 @@ public class RecordingService extends Service {
             count++;
 
             mFileName = getString(R.string.default_file_name)
-                    + "_" + (mDatabase.getCount() + count) + ".mp4";
+                    + "_" + (mDatabase.getCount() + count) + ".mp3";
             mFilePath = FilePath.dir;
             mFilePath += mFileName;
 
