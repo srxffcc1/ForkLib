@@ -1,7 +1,9 @@
 package com.danielkim.soundrecorder.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -12,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.danielkim.soundrecorder.FilePath;
 import com.danielkim.soundrecorder.R;
 import com.danielkim.soundrecorder.fragments.FileViewerFragment;
 import com.danielkim.soundrecorder.fragments.RecordFragment;
@@ -20,7 +23,7 @@ import com.danielkim.soundrecorder.fragments.RecordFragment;
 public class RecordActivity extends AppCompatActivity{
 
     private static final String LOG_TAG = RecordActivity.class.getSimpleName();
-
+    private Uri path;
     private PagerSlidingTabStrip tabs;
     private ViewPager pager;
 
@@ -28,6 +31,10 @@ public class RecordActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recoed_activity_main);
+        path=getIntent().getParcelableExtra(MediaStore.EXTRA_OUTPUT);
+        if(!"".equals(path)){
+            FilePath.dir=path.getPath()+"/";
+        }
 
         pager = (ViewPager) findViewById(R.id.pager);
         pager.setAdapter(new MyAdapter(getSupportFragmentManager()));

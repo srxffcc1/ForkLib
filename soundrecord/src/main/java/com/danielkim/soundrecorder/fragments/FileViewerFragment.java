@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.danielkim.soundrecorder.FilePath;
 import com.danielkim.soundrecorder.R;
 import com.danielkim.soundrecorder.adapters.FileViewerAdapter;
 
@@ -63,20 +64,17 @@ public class FileViewerFragment extends Fragment{
     }
 
     FileObserver observer =
-            new FileObserver(android.os.Environment.getExternalStorageDirectory().toString()
-                    + "/SoundRecorder") {
+            new FileObserver(FilePath.dir) {
                 // set up a file observer to watch this directory on sd card
                 @Override
                 public void onEvent(int event, String file) {
                     if(event == FileObserver.DELETE){
                         // user deletes a recording file out of the app
 
-                        String filePath = android.os.Environment.getExternalStorageDirectory().toString()
-                                + "/SoundRecorder" + file + "]";
+                        String filePath = FilePath.dir + file + "]";
 
                         Log.d(LOG_TAG, "File deleted ["
-                                + android.os.Environment.getExternalStorageDirectory().toString()
-                                + "/SoundRecorder" + file + "]");
+                                + FilePath.dir + file + "]");
 
                         // remove file from database and recyclerview
                         mFileViewerAdapter.removeOutOfApp(filePath);
