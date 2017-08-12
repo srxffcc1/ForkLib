@@ -1,12 +1,5 @@
 package com.artifex.mupdf;
 
-import java.util.ArrayList;
-
-import com.artifex.mupdf.MuPDFCore.Cookie;
-import com.artifex.mupdf.old.R;
-import com.artifex.mupdf.old.R.layout;
-import com.artifex.mupdf.old.R.string;
-
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.ClipData;
@@ -23,6 +16,10 @@ import android.view.LayoutInflater;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+
+import com.artifex.mupdf.old.R;
+
+import java.util.ArrayList;
 
 /* This enum should be kept in line with the cooresponding C enum in mupdf.c */
 enum SignatureState {
@@ -123,7 +120,7 @@ public class MuPDFPageView extends PageView implements MuPDFView {
 		mTextEntryBuilder = new AlertDialog.Builder(c);
 		mTextEntryBuilder.setTitle(getContext().getString(R.string.fill_out_text_field));
 		LayoutInflater inflater = (LayoutInflater)c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		mEditText = (EditText)inflater.inflate(R.layout.textentry, null);
+		mEditText =new EditText(c);
 		mTextEntryBuilder.setView(mEditText);
 		mTextEntryBuilder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
