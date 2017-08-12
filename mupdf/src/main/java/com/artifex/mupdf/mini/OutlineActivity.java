@@ -1,4 +1,4 @@
-package com.artifex.mupdf.mini;
+package com.artifex.mupdf.old;
 
 import android.app.ListActivity;
 import android.os.Bundle;

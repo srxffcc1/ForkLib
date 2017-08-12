@@ -1,4 +1,4 @@
-package com.artifex.mupdf.mini;
+package com.artifex.mupdf.old;
 
 import android.app.Activity;
 import android.app.AlertDialog;
