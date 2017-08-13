@@ -35,7 +35,6 @@ import com.artifex.mupdf.Annotation;
 import com.artifex.mupdf.FilePicker;
 import com.artifex.mupdf.MuPDFAlert;
 import com.artifex.mupdf.MuPDFCore;
-import com.artifex.mupdf.MuPDFPageAdapter;
 import com.artifex.view.MuPDFReaderView;
 import com.artifex.mupdf.MuPDFView;
 import com.artifex.mupdf.OutlineItem;

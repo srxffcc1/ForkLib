@@ -121,7 +121,7 @@ public abstract class PageView extends ViewGroup {
 	private       Bitmap    mPatchBm;
 	private       CancellableAsyncTask<Void,Void> mDrawPatch;
 	private       RectF     mSearchBoxes[];
-	protected     LinkInfo  mLinks[];
+	protected LinkInfo mLinks[];
 	private       RectF     mSelectBox;
 	private TextWord mText[][];
 	private       RectF     mItemSelectBox;

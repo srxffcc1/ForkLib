@@ -56,7 +56,7 @@ public class MuPDFCore
 	private native int setFocusedWidgetTextInternal(String text);
 	private native String getFocusedWidgetTextInternal();
 	private native int getFocusedWidgetTypeInternal();
-	private native LinkInfo [] getPageLinksInternal(int page);
+	private native LinkInfo[] getPageLinksInternal(int page);
 	private native RectF[] getWidgetAreasInternal(int page);
 	private native Annotation[] getAnnotationsInternal(int page);
 	private native OutlineItem [] getOutlineInternal();
@@ -75,29 +75,7 @@ public class MuPDFCore
 	private native void abortCookieInternal(long cookie);
 	public native boolean javascriptSupportedInternal();
 
-	public synchronized int passClickEvent(int page, float x, float y) {
-		return passClickEventInternal(page,x,y);
-	}
 
-	public synchronized int getFocusedWidgetType() {
-		return getFocusedWidgetTypeInternal();
-	}
-
-	public synchronized String getFocusedWidgetText() {
-		return getFocusedWidgetTextInternal();
-	}
-
-	public synchronized String[] getFocusedWidgetChoiceOptions() {
-		return getFocusedWidgetChoiceOptionsInternal();
-	}
-
-	public synchronized String[] getFocusedWidgetChoiceSelected() {
-		return getFocusedWidgetChoiceSelectedInternal();
-	}
-
-	public synchronized int getFocusedWidgetSignatureState() {
-		return getFocusedWidgetSignatureStateInternal();
-	}
 
 	public class Cookie
 	{
@@ -212,6 +190,31 @@ public class MuPDFCore
 		globals = 0;
 	}
 
+	public synchronized int passClickEvent(int page, float x, float y) {
+		return passClickEventInternal(page,x,y);
+	}
+
+	public synchronized int getFocusedWidgetType() {
+		return getFocusedWidgetTypeInternal();
+	}
+
+	public synchronized String getFocusedWidgetText() {
+		return getFocusedWidgetTextInternal();
+	}
+
+	public synchronized String[] getFocusedWidgetChoiceOptions() {
+		return getFocusedWidgetChoiceOptionsInternal();
+	}
+
+	public synchronized String[] getFocusedWidgetChoiceSelected() {
+		return getFocusedWidgetChoiceSelectedInternal();
+	}
+
+	public synchronized int getFocusedWidgetSignatureState() {
+		return getFocusedWidgetSignatureStateInternal();
+	}
+
+
 	public synchronized void drawPage(Bitmap bm, int page,
 			int pageW, int pageH,
 			int patchX, int patchY,
@@ -251,7 +254,7 @@ public class MuPDFCore
 		return signFocusedSignatureInternal(keyFile, password);
 	}
 
-	public synchronized LinkInfo [] getPageLinks(int page) {
+	public synchronized LinkInfo[] getPageLinks(int page) {
 		return getPageLinksInternal(page);
 	}
 
