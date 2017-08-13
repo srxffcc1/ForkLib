@@ -1,4 +1,4 @@
-package com.artifex.mupdf;
+package com.artifex.mupdfact;
 
 import android.content.Context;
 import android.graphics.Point;
@@ -6,6 +6,9 @@ import android.graphics.PointF;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+
+import com.artifex.mupdf.MuPDFCore;
+import com.artifex.mupdf.MuPDFReflowView;
 
 public class MuPDFReflowAdapter extends BaseAdapter {
 	private final Context mContext;

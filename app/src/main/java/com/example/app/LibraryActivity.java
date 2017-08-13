@@ -53,9 +53,14 @@ public class LibraryActivity extends ListActivity
 		super.onCreate(savedInstanceState);
 
 		/* Hide 'home' icon on old themes */
-		getActionBar().setDisplayShowHomeEnabled(false);
+		try {
+			getActionBar().setDisplayShowHomeEnabled(false);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		topDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+		System.out.println(topDirectory);
 		currentDirectory = topDirectory;
 
 		adapter = new ArrayAdapter<Item>(this, android.R.layout.simple_list_item_1);

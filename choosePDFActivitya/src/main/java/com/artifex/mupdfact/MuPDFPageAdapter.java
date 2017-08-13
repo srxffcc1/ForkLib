@@ -1,4 +1,4 @@
-package com.artifex.mupdf;
+package com.artifex.mupdfact;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -8,6 +8,11 @@ import android.util.SparseArray;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+
+import com.artifex.mupdf.AsyncTask;
+import com.artifex.mupdf.FilePicker;
+import com.artifex.mupdf.MuPDFCore;
+import com.artifex.mupdf.MuPDFPageView;
 
 public class MuPDFPageAdapter extends BaseAdapter {
 	private final Context mContext;
