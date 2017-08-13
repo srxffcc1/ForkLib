@@ -1,5 +1,6 @@
 package com.artifex.mupdf;
 
+@Core
 public class OutlineItem {
 	public final int    level;
 	public final String title;

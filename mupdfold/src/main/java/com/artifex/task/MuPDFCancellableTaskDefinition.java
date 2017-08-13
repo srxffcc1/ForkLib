@@ -1,4 +1,6 @@
-package com.artifex.mupdf;
+package com.artifex.task;
+
+import com.artifex.mupdf.MuPDFCore;
 
 public abstract class MuPDFCancellableTaskDefinition<Params, Result> implements CancellableTaskDefinition<Params, Result>
 {

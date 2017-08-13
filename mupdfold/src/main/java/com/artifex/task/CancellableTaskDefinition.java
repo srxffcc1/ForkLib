@@ -1,4 +1,4 @@
-package com.artifex.mupdf;
+package com.artifex.task;
 
 public interface CancellableTaskDefinition <Params, Result>
 {

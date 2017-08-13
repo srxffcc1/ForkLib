@@ -1,4 +1,4 @@
-package com.artifex.mupdf;
+package com.artifex.task;
 
 
 import android.app.AlertDialog;
@@ -8,6 +8,8 @@ import android.content.DialogInterface;
 import android.graphics.RectF;
 import android.os.Handler;
 
+import com.artifex.mupdf.AsyncTask;
+import com.artifex.mupdf.MuPDFCore;
 import com.artifex.mupdf.old.R;
 
 

@@ -1,4 +1,4 @@
-package com.artifex.mupdf;
+package com.artifex.widght;
 
 public enum WidgetType {
 	NONE,

@@ -60,6 +60,7 @@ import java.util.Stack;
  * @author  Josh Bloch and Doug Lea
  * @since   1.6
  * @param <E> the type of elements held in this collection
+ *           不可替换为系统的实现不一样
  */
 public class ArrayDeque<E> extends AbstractCollection<E>
                            implements Deque<E>, Cloneable, java.io.Serializable

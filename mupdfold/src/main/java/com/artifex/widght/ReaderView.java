@@ -1,4 +1,4 @@
-package com.artifex.view;
+package com.artifex.widght;
 
 import android.content.Context;
 import android.graphics.Point;
@@ -13,7 +13,7 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Scroller;
 
-import com.artifex.mupdf.Stepper;
+import com.artifex.task.Stepper;
 import com.artifex.mupdf.old.R;
 
 import java.util.LinkedList;

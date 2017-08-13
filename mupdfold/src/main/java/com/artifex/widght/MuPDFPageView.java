@@ -1,4 +1,4 @@
-package com.artifex.view;
+package com.artifex.widght;
 
 import android.annotation.TargetApi;
 import android.app.AlertDialog;
@@ -19,14 +19,12 @@ import android.widget.EditText;
 
 import com.artifex.mupdf.Annotation;
 import com.artifex.mupdf.AsyncTask;
-import com.artifex.mupdf.CancellableTaskDefinition;
-import com.artifex.mupdf.FilePicker;
+import com.artifex.task.CancellableTaskDefinition;
 import com.artifex.mupdf.LinkInfo;
-import com.artifex.mupdf.MuPDFCancellableTaskDefinition;
+import com.artifex.task.MuPDFCancellableTaskDefinition;
 import com.artifex.mupdf.MuPDFCore;
 import com.artifex.mupdf.MuPDFView;
 import com.artifex.mupdf.TextWord;
-import com.artifex.mupdf.WidgetType;
 import com.artifex.mupdf.old.R;
 
 import java.util.ArrayList;

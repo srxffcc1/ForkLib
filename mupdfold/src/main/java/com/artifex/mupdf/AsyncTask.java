@@ -16,6 +16,10 @@
 
 package com.artifex.mupdf;
 
+import android.os.Handler;
+import android.os.Message;
+import android.os.Process;
+
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
@@ -29,10 +33,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import android.os.Process;
-import android.os.Handler;
-import android.os.Message;
 
 /**
  * <p>AsyncTask enables proper and easy use of the UI thread. This class allows to
@@ -176,6 +176,7 @@ import android.os.Message;
  * <p>If you truly want parallel execution, you can invoke
  * {@link #executeOnExecutor(java.util.concurrent.Executor, Object[])} with
  * {@link #THREAD_POOL_EXECUTOR}.</p>
+ * 不可替换为系统的实现不一样
  */
 public abstract class AsyncTask<Params, Progress, Result> {
     private static final String LOG_TAG = "AsyncTask";

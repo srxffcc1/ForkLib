@@ -1,4 +1,4 @@
-package com.artifex.view;
+package com.artifex.widght;
 
 import com.artifex.mupdf.LinkInfo;
 import com.artifex.mupdf.LinkInfoExternal;
@@ -7,7 +7,7 @@ import com.artifex.mupdf.LinkInfoRemote;
 import com.artifex.mupdf.LinkInfoVisitor;
 import com.artifex.mupdf.MuPDFView;
 import com.artifex.mupdf.MuPDFView.Hit;
-import com.artifex.mupdf.SearchTaskResult;
+import com.artifex.task.SearchTaskResult;
 
 import android.content.Context;
 import android.content.Intent;

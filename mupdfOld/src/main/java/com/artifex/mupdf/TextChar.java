@@ -1,7 +1,7 @@
 package com.artifex.mupdf;
 
 import android.graphics.RectF;
-
+@Core
 public class TextChar extends RectF {
 	public char c;
 

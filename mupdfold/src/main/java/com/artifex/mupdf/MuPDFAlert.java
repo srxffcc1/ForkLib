@@ -1,5 +1,6 @@
 package com.artifex.mupdf;
 
+@Core
 public class MuPDFAlert {
 	public enum IconType {Error,Warning,Question,Status};
 	public enum ButtonPressed {None,Ok,Cancel,No,Yes};

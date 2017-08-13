@@ -1,5 +1,6 @@
 package com.artifex.mupdf;
 
+@Core
 public class LinkInfoExternal extends LinkInfo {
 	final public String url;
 

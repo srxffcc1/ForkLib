@@ -1,7 +1,7 @@
 package com.artifex.mupdf;
 
 import android.graphics.RectF;
-
+@Core
 public class Annotation extends RectF {
 	public enum Type {
 		TEXT, LINK, FREETEXT, LINE, SQUARE, CIRCLE, POLYGON, POLYLINE, HIGHLIGHT,

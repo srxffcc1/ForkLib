@@ -5,6 +5,7 @@ import android.graphics.RectF;
 
 
 
+@Core
 public interface MuPDFView {
 	public enum Hit {Nothing, Widget, Annotation}
 	public void setPage(int page, PointF size);

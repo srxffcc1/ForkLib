@@ -1,5 +1,6 @@
 package com.artifex.mupdf;
 
+@Core
 public class LinkInfoRemote extends LinkInfo {
 	final public String fileSpec;
 	final public int pageNumber;

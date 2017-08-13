@@ -1,4 +1,4 @@
-package com.artifex.view;
+package com.artifex.widght;
 
 import android.content.Context;
 import android.graphics.Point;

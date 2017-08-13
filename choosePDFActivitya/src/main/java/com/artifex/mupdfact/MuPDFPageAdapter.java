@@ -10,9 +10,9 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.artifex.mupdf.AsyncTask;
-import com.artifex.mupdf.FilePicker;
+import com.artifex.widght.FilePicker;
 import com.artifex.mupdf.MuPDFCore;
-import com.artifex.view.MuPDFPageView;
+import com.artifex.widght.MuPDFPageView;
 
 public class MuPDFPageAdapter extends BaseAdapter {
 	private final Context mContext;

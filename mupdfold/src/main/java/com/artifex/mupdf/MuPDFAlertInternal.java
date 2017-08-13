@@ -1,6 +1,7 @@
 package com.artifex.mupdf;
 
 // Version of MuPDFAlert without enums to simplify JNI
+@Core
 public class MuPDFAlertInternal {
 	public final String message;
 	public final int iconType;

@@ -1,4 +1,4 @@
-package com.artifex.mupdf;
+package com.artifex.task;
 
 import android.annotation.SuppressLint;
 import android.os.Build;

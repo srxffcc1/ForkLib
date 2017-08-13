@@ -1,4 +1,4 @@
-package com.artifex.mupdf;
+package com.artifex.widght;
 
 
 import android.animation.Animator;

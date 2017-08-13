@@ -1,5 +1,6 @@
 package com.artifex.mupdf;
 
+@Core
 public class LinkInfoInternal extends LinkInfo {
 	final public int pageNumber;
 

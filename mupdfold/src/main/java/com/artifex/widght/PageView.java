@@ -1,4 +1,4 @@
-package com.artifex.view;
+package com.artifex.widght;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -20,8 +20,8 @@ import android.widget.ProgressBar;
 
 import com.artifex.mupdf.Annotation;
 import com.artifex.mupdf.AsyncTask;
-import com.artifex.mupdf.CancellableAsyncTask;
-import com.artifex.mupdf.CancellableTaskDefinition;
+import com.artifex.task.CancellableAsyncTask;
+import com.artifex.task.CancellableTaskDefinition;
 import com.artifex.mupdf.LinkInfo;
 import com.artifex.mupdf.TextWord;
 import com.artifex.mupdf.old.R;

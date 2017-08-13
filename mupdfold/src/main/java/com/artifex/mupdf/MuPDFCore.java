@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.PointF;
 import android.graphics.RectF;
 
+@Core
 public class MuPDFCore
 {
 	/* load our native library */

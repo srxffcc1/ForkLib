@@ -17,14 +17,14 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.RelativeLayout;
 
-import com.artifex.mupdf.FilePicker;
+import com.artifex.widght.FilePicker;
 import com.artifex.mupdf.MuPDFAlert;
 import com.artifex.mupdf.MuPDFCore;
-import com.artifex.view.MuPDFReaderView;
+import com.artifex.widght.MuPDFReaderView;
 import com.artifex.mupdf.MuPDFView;
-import com.artifex.view.ReaderView;
-import com.artifex.mupdf.SearchTask;
-import com.artifex.mupdf.SearchTaskResult;
+import com.artifex.widght.ReaderView;
+import com.artifex.task.SearchTask;
+import com.artifex.task.SearchTaskResult;
 import com.artifex.mupdfdemo.R;
 
 import java.io.File;

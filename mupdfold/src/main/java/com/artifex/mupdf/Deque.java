@@ -167,6 +167,7 @@ import java.util.Stack;
  * @author Josh Bloch
  * @since  1.6
  * @param <E> the type of elements held in this collection
+ * 不可替换为系统的
  */
 
 public interface Deque<E> extends Queue<E> {
