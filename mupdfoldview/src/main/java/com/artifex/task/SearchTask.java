@@ -8,9 +8,8 @@ import android.content.DialogInterface;
 import android.graphics.RectF;
 import android.os.Handler;
 
-import com.artifex.mupdf.AsyncTask;
 import com.artifex.mupdf.MuPDFCore;
-import com.artifex.mupdf.old.R;
+import com.artifex.mupdfdemo.R;
 
 
 class ProgressDialogX extends ProgressDialog {

@@ -1,7 +1,5 @@
 package com.artifex.task;
 
-import com.artifex.mupdf.AsyncTask;
-
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 

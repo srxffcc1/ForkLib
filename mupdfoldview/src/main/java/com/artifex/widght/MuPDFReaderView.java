@@ -1,14 +1,5 @@
 package com.artifex.widght;
 
-import com.artifex.mupdf.LinkInfo;
-import com.artifex.mupdf.LinkInfoExternal;
-import com.artifex.mupdf.LinkInfoInternal;
-import com.artifex.mupdf.LinkInfoRemote;
-import com.artifex.mupdf.LinkInfoVisitor;
-import com.artifex.mupdf.MuPDFView;
-import com.artifex.mupdf.MuPDFView.Hit;
-import com.artifex.task.SearchTaskResult;
-
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -18,6 +9,15 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.WindowManager;
+
+import com.artifex.mupdf.LinkInfo;
+import com.artifex.mupdf.LinkInfoExternal;
+import com.artifex.mupdf.LinkInfoInternal;
+import com.artifex.mupdf.LinkInfoRemote;
+import com.artifex.mupdf.LinkInfoVisitor;
+import com.artifex.mupdf.MuPDFView;
+import com.artifex.mupdf.MuPDFView.Hit;
+import com.artifex.task.SearchTaskResult;
 
 public class MuPDFReaderView extends ReaderView {
 	public enum Mode {Viewing, Selecting, Drawing}

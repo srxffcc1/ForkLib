@@ -1,5 +1,6 @@
 package com.artifex.widght;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Point;
 import android.graphics.PointF;
@@ -12,7 +13,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.artifex.mupdf.Annotation;
-import com.artifex.mupdf.AsyncTask;
+import com.artifex.task.AsyncTask;
 import com.artifex.mupdf.LinkInfo;
 import com.artifex.mupdf.MuPDFCore;
 import com.artifex.mupdf.MuPDFView;
@@ -26,6 +27,7 @@ public class MuPDFReflowView extends WebView implements MuPDFView {
 	private int mContentHeight;
 	AsyncTask<Void,Void,byte[]> mLoadHTML;
 
+	@SuppressLint("JavascriptInterface")
 	public MuPDFReflowView(Context c, MuPDFCore core, Point parentSize) {
 		super(c);
 		mHandler = new Handler();

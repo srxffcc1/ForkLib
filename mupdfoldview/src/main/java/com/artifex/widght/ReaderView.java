@@ -13,8 +13,8 @@ import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.Scroller;
 
+import com.artifex.mupdfdemo.R;
 import com.artifex.task.Stepper;
-import com.artifex.mupdf.old.R;
 
 import java.util.LinkedList;
 import java.util.NoSuchElementException;

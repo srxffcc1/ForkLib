@@ -7,7 +7,8 @@ import android.animation.AnimatorSet;
 import android.app.Activity;
 import android.view.View;
 
-import com.artifex.mupdf.old.R;
+import com.artifex.mupdfdemo.R;
+
 
 public class SafeAnimatorInflater
 {

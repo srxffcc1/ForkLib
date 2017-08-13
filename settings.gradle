@@ -16,6 +16,6 @@
 //include ':unzip'
 //include ':verticalrefreshlayout'
 //include ':virtualapp'
-include ':mupdfold'
+//include ':mupdfold'
 //include ':mupdfmini'
-include ':choosePDFActivitya'
+include ':mupdfoldview'

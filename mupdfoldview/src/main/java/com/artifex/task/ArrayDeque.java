@@ -3,7 +3,7 @@
  * as explained at http://creativecommons.org/publicdomain/zero/1.0/.
  */
 
-package com.artifex.mupdf;
+package com.artifex.task;
 
 import java.util.AbstractCollection;
 import java.util.Arrays;

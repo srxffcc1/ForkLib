@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.artifex.mupdf.AsyncTask;
+import com.artifex.task.AsyncTask;
 import com.artifex.widght.FilePicker;
 import com.artifex.mupdf.MuPDFCore;
 import com.artifex.widght.MuPDFPageView;

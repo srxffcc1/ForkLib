@@ -18,14 +18,14 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 
 import com.artifex.mupdf.Annotation;
-import com.artifex.mupdf.AsyncTask;
-import com.artifex.task.CancellableTaskDefinition;
 import com.artifex.mupdf.LinkInfo;
-import com.artifex.task.MuPDFCancellableTaskDefinition;
 import com.artifex.mupdf.MuPDFCore;
 import com.artifex.mupdf.MuPDFView;
 import com.artifex.mupdf.TextWord;
-import com.artifex.mupdf.old.R;
+import com.artifex.mupdfdemo.R;
+import com.artifex.task.AsyncTask;
+import com.artifex.task.CancellableTaskDefinition;
+import com.artifex.task.MuPDFCancellableTaskDefinition;
 
 import java.util.ArrayList;
 
