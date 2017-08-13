@@ -23,5 +23,5 @@ android {
 }
 dependencies {
     //    compile 'com.sixdown.mupdfold:mupdfold:1.0.1'
-    compile project(':mupdfOld')
+    compile project(':mupdfold')
 }

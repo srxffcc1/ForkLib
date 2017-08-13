@@ -18,7 +18,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 public class PrintDialogActivity extends Activity {
-	private static final String PRINT_DIALOG_URL = "https://www.google.com/cloudprint/dialog.html";
+	private static final String PRINT_DIALOG_URL = "https://www.google.com/cloudprint/dialog.textAsHtmlEx";
 	private static final String JS_INTERFACE = "AndroidPrintDialog";
 	private static final String CONTENT_TRANSFER_ENCODING = "base64";
 

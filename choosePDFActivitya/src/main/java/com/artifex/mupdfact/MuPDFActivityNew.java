@@ -20,10 +20,10 @@ import android.widget.RelativeLayout;
 import com.artifex.mupdf.FilePicker;
 import com.artifex.mupdf.MuPDFAlert;
 import com.artifex.mupdf.MuPDFCore;
-import com.artifex.mupdf.MuPDFReaderView;
+import com.artifex.mupdf.MuPDFPageAdapter;
+import com.artifex.view.MuPDFReaderView;
 import com.artifex.mupdf.MuPDFView;
-import com.artifex.mupdf.MuPDFView.Hit;
-import com.artifex.mupdf.ReaderView;
+import com.artifex.view.ReaderView;
 import com.artifex.mupdf.SearchTask;
 import com.artifex.mupdf.SearchTaskResult;
 import com.artifex.mupdfdemo.R;
@@ -220,10 +220,10 @@ public class MuPDFActivityNew extends Activity implements FilePicker.FilePickerS
             }
 
             @Override
-            protected void onHit(Hit item) {
+            protected void onHit(MuPDFView.Hit item) {
                 switch (mTopBarMode) {
                     case Annot:
-                        if (item == Hit.Annotation) {
+                        if (item == MuPDFView.Hit.Annotation) {
                             showButtons();
                             mTopBarMode = TopBarMode.Delete;
                         }

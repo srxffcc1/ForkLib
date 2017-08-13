@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.artifex.mupdf.MuPDFCore;
-import com.artifex.mupdf.MuPDFReflowView;
+import com.artifex.view.MuPDFReflowView;
 
 public class MuPDFReflowAdapter extends BaseAdapter {
 	private final Context mContext;

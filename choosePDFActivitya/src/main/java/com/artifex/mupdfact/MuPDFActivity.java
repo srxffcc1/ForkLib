@@ -35,10 +35,11 @@ import com.artifex.mupdf.Annotation;
 import com.artifex.mupdf.FilePicker;
 import com.artifex.mupdf.MuPDFAlert;
 import com.artifex.mupdf.MuPDFCore;
-import com.artifex.mupdf.MuPDFReaderView;
+import com.artifex.mupdf.MuPDFPageAdapter;
+import com.artifex.view.MuPDFReaderView;
 import com.artifex.mupdf.MuPDFView;
 import com.artifex.mupdf.OutlineItem;
-import com.artifex.mupdf.ReaderView;
+import com.artifex.view.ReaderView;
 import com.artifex.mupdf.SafeAnimatorInflater;
 import com.artifex.mupdf.SearchTask;
 import com.artifex.mupdf.SearchTaskResult;
@@ -104,7 +105,7 @@ public class MuPDFActivity extends Activity implements FilePicker.FilePickerSupp
 		// until the user's reply is received. This method creates an asynchronous task,
 		// the purpose of which is to wait of these requests and produce the dialog
 		// in response, while leaving the core blocked. When the dialog receives the
-		// user's response, it is sent to the core via replyToAlert, unblocking it.
+		// user's response, it is sent to the core via replyToAlertInternalEx, unblocking it.
 		// Another alert-waiting task is then created to pick up the next alert.
 		if (mAlertTask != null) {
 			mAlertTask.cancel(true);
