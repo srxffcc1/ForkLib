@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.LayoutRes;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
@@ -71,13 +72,14 @@ public class VRefreshLayout extends ViewGroup {
     }
 
     public VRefreshLayout(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        setDefaultHeaderView();
-        setChildrenDrawingOrderEnabled(true);
+        this(context, attrs,0);
+
     }
 
     public VRefreshLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        TypedArray ta = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.enabled});
+        setEnabled(ta.getBoolean(0,isEnabled()));
         setDefaultHeaderView();
         setChildrenDrawingOrderEnabled(true);
     }
@@ -85,6 +87,8 @@ public class VRefreshLayout extends ViewGroup {
     @SuppressLint("NewApi")
     public VRefreshLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
+        TypedArray ta = context.obtainStyledAttributes(attrs, new int[]{android.R.attr.enabled});
+        setEnabled(ta.getBoolean(0,isEnabled()));
         setDefaultHeaderView();
         setChildrenDrawingOrderEnabled(true);
     }
@@ -555,6 +559,7 @@ public class VRefreshLayout extends ViewGroup {
         if (mOnRefreshListeners == null) {
             mOnRefreshListeners = new ArrayList<>();
         }
+        setEnabled(true);
         mOnRefreshListeners.add(onRefreshListener);
     }
 
