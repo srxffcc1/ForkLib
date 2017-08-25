@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="15" />
+
+    <TextView
+        android:id="@+id/bookcontentName2"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="200"
+        android:gravity="center_vertical" />
+
+    <EditText
+        android:id="@+id/bookcontentValue2"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="300"
+        android:gravity="center_vertical"
+        android:hint="未填写"
+        android:inputType="textMultiLine" />
+
+</LinearLayout>

@@ -17,6 +17,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 dependencies {
@@ -31,7 +34,7 @@ publish {
     userOrg = 'srxffcc1'//bintray网的用户id
     groupId = 'com.sixdown.common'//自己定义一个唯一的java的包名
     artifactId = 'common'//在bintray上的package名字
-    publishVersion = '1.0.0'//版本号
+    publishVersion = '1.0.1'//版本号
     desc = 'just upload this and ?'//描述，不重要
     website = 'https://github.com/srxffcc1/un7zip'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
     licences = ['Apache-2.0']//协议

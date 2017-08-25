@@ -51,7 +51,7 @@ import java.util.List;
  */
 public class FileUtils {
 
-    public static boolean hsveSDCard() {
+    public static boolean haveSDCard() {
         return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 
@@ -220,7 +220,7 @@ public class FileUtils {
      * @param path
      * @return
      */
-    public static List<File> getFilesSort(String path) {
+    public static List<File> getFilesSortDesc(String path) {
 
         List<File> list = getFiles(path, new ArrayList<File>());
 
@@ -242,32 +242,54 @@ public class FileUtils {
     }
 
     /**
-     * 对文件列表排序
+     * 获得排序的文件列表
      *
      * @param path
      * @return
      */
-    public static List<File> getFilesSort(File path) {
+    public static List<File> getFilesSortAsc(String path) {
 
-        List<File> list = getFiles(path.getAbsolutePath(), new ArrayList<File>());
+        List<File> list = getFiles(path, new ArrayList<File>());
 
         if (list != null && list.size() > 0) {
 
             Collections.sort(list, new Comparator<File>() {
                 public int compare(File file, File newFile) {
-                    if (file.lastModified() < newFile.lastModified()) {
+                    if (file.lastModified() > newFile.lastModified()) {
                         return 1;
                     } else if (file.lastModified() == newFile.lastModified()) {
                         return 0;
                     } else {
                         return -1;
                     }
-
                 }
             });
-
         }
         return list;
+    }
+
+    /**
+     * 对文件列表排序
+     *
+     * @param path
+     * @return
+     */
+    public static List<File> getFilesSortDesc(File path) {
+
+
+        return getFilesSortDesc(path.getAbsolutePath());
+    }
+
+    /**
+     * 对文件列表排序
+     *
+     * @param path
+     * @return
+     */
+    public static List<File> getFilesSortAsc(File path) {
+
+
+        return getFilesSortAsc(path.getAbsolutePath());
     }
 
     /**
@@ -453,6 +475,58 @@ public class FileUtils {
         return inputStream2String(is);
     }
 
+    public static String assetsCopy(Context context,String desdir,String assetsreg){
+        String result="";
+        String startwith = assetsreg;
+        String outstringparent = desdir;
+        try {
+            String[] alllist = context.getAssets().list("");
+            for (int i = 0; i < alllist.length; i++) {
+//                //System.out.println("分配");
+//                //System.out.println(alllist[i]+":"+startwith);
+                if (alllist[i].startsWith(startwith)) {
+                    copyAssetToPath(context,alllist[i],outstringparent);
+                    result=outstringparent+"/"+alllist[i];
+                    System.gc();// gc
+                    System.runFinalization();// gc
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+    private static void copyAssetToPath(Context context, String instring,String outstring) throws IOException {
+        InputStream is;
+        FileOutputStream fos;
+        if(new File(outstring+"/"+instring).exists()){
+
+        }else{
+            is = context.getAssets().open(
+                    instring);
+            fos = new FileOutputStream(outstring+"/"+instring);
+
+            long total = is.available();
+            int copyedSize = 0;
+//            int needsize=total>512*1024*1024?4096:1024;
+            byte[] buffer = new byte[1024];
+            long byteCount = 0;
+            int len = 0;
+            long sum = 0;
+            while (sum < total) {//这里是下载文件是否能全部下载完的关键！
+                len = is.read(buffer);
+                fos.write(buffer, 0, len);
+                sum += len;
+            }
+            is.close();
+            fos.flush();// 刷新缓冲区
+            fos.close();
+        }
+
+
+
+
+    }
     /**
      * 输入流转字符串
      *
