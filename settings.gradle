@@ -5,7 +5,6 @@
 //include ':buglyutil'
 //include ':common'
 //include ':droidplugin'
-//include ':kjhttp'
 //include ':legendCore'
 //include ':mupdf'
 //include ':navslidelibrary'
