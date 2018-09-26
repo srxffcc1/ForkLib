@@ -8,4 +8,5 @@ import android.os.Environment;
 
 public class FilePath {
     public static String dir= Environment.getExternalStorageDirectory().getAbsolutePath()+"/SoundRecorder/";
+    public static String tmpnowpath="";
 }

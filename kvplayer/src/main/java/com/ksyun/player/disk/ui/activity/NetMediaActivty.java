@@ -28,6 +28,7 @@ import com.ksyun.player.disk.util.Settings;
 import java.util.ArrayList;
 
 
+
 public class NetMediaActivty extends AppCompatActivity implements View.OnClickListener{
     private Button netHistory;
     private Button netScan;
@@ -69,7 +70,7 @@ public class NetMediaActivty extends AppCompatActivity implements View.OnClickLi
         netStartVideo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String path = "rtsp://admin:12345@124.152.9.144:20041/PSIA/streaming/channels/301";
+                String path = textUrl.getText().toString();
                 NetDb = new NetDbAdapter(NetMediaActivty.this);
                 NetDb.open();
 
@@ -131,39 +132,32 @@ public class NetMediaActivty extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        int i = view.getId();
-        if (i == R.id.net_history) {
-            listUrl = new ArrayList<String>();
-            NetDb = new NetDbAdapter(NetMediaActivty.this);
-            NetDb.open();
-            cursor = NetDb.getAllData();
-            cursor.moveToFirst();
-            if (cursor.getCount() > 0) {
-                listUrl.add(cursor.getString(cursor.getColumnIndex(NetDbAdapter.KEY_PATH)));
-            }
-            while (cursor.moveToNext()) {
-                listUrl.add(cursor.getString(cursor.getColumnIndex(NetDbAdapter.KEY_PATH)));
-            }
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, listUrl);
-            netList.setAdapter(adapter);
-            netList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    textUrl.setText(listUrl.get(i));
+            int id=view.getId();
+            if(id==R.id.net_history){
+                listUrl = new ArrayList<String>();
+                NetDb = new NetDbAdapter(NetMediaActivty.this);
+                NetDb.open();
+                cursor = NetDb.getAllData();
+                cursor.moveToFirst();
+                if (cursor.getCount() > 0) {
+                    listUrl.add(cursor.getString(cursor.getColumnIndex(NetDbAdapter.KEY_PATH)));
                 }
-            });
+                while (cursor.moveToNext()) {
+                    listUrl.add(cursor.getString(cursor.getColumnIndex(NetDbAdapter.KEY_PATH)));
+                }
 
+                ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_expandable_list_item_1, listUrl);
+                netList.setAdapter(adapter);
+                netList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                        textUrl.setText(listUrl.get(i));
+                    }
+                });}
+                else if(id==R.id.net_setting){
+                Intent intent2 = new Intent(this, SettingActivity.class);
+                startActivity(intent2);}
 
-        } else if (i == R.id.net_scan) {
-
-
-        } else if (i == R.id.net_setting) {
-            Intent intent2 = new Intent(this, SettingActivity.class);
-            startActivity(intent2);
-
-        } else {
-        }
     }
 
     @Override

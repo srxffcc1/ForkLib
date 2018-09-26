@@ -220,7 +220,6 @@ public class FloatingVideoActivity extends Activity implements Handler.Callback 
             mSurfaceTexture = surfaceTexture;
             if (mSurface == null) {
                 mSurface = new Surface(mSurfaceTexture);
-
                 if (KSYFloatingPlayer.getInstance().getKSYMediaPlayer() != null)
                     KSYFloatingPlayer.getInstance().getKSYMediaPlayer().setSurface(mSurface);
             }

@@ -63,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         FragmentManager fm = this.getFragmentManager();
         FragmentTransaction transaction = fm.beginTransaction();
         localFragment = new LocalFragment();
-
         transaction.replace(R.id.contentFrame,localFragment);
         transaction.commit();
     }
@@ -71,23 +70,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         Intent intent;
-        int i = view.getId();
-        if (i == R.id.media_network) {
+        int  id =view.getId();
+        if(id==R.id.media_network){
             Toast.makeText(MainActivity.this, "media_net", Toast.LENGTH_SHORT).show();
-            intent = new Intent(MainActivity.this, NetMediaActivty.class);
+            intent = new Intent(MainActivity.this,NetMediaActivty.class);
             startActivity(intent);
-
-        } else if (i == R.id.media_history) {
-            Intent intent2 = new Intent(this, HistoryActivity.class);
+        }else if(id==R.id.media_history){
+            Intent intent2 = new Intent(this,HistoryActivity.class);
             startActivity(intent2);
             Toast.makeText(MainActivity.this, "media_history", Toast.LENGTH_SHORT).show();
-
-        } else if (i == R.id.media_setting) {
-            intent = new Intent(this, SettingActivity.class);
+        }else if(id==R.id.media_setting){
+            intent = new Intent(this,SettingActivity.class);
             startActivity(intent);
             Toast.makeText(MainActivity.this, "media_setting", Toast.LENGTH_SHORT).show();
-
-        } else {
         }
     }
 

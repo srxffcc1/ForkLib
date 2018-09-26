@@ -3,7 +3,6 @@ package com.ksyun.player.disk.ui.activity.player;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.media.AudioManager;
@@ -117,7 +116,7 @@ public class TextureVideoActivity extends Activity implements View.OnClickListen
     private int mVideoWidth = 0;
     private int mVideoHeight = 0;
 
-    private int mVideoScaleIndex = 1;
+    private int mVideoScaleIndex = 0;
     boolean useHwCodec = false;
 
     private Timer timer = null;
@@ -150,7 +149,7 @@ public class TextureVideoActivity extends Activity implements View.OnClickListen
             mVideoHeight = mVideoView.getVideoHeight();
 
             // Set Video Scaling Mode
-            mVideoView.setVideoScalingMode(KSYMediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT);
+            mVideoView.setVideoScalingMode(KSYMediaPlayer.VIDEO_SCALING_MODE_SCALE_TO_FIT_WITH_CROPPING);
 
             //start player
             mVideoView.start();
@@ -273,7 +272,7 @@ public class TextureVideoActivity extends Activity implements View.OnClickListen
                 default:
                     Log.e(TAG, "OnErrorListener, Error:" + what + ",extra:" + extra);
             }
-            Toast.makeText(TextureVideoActivity.this,"连接中断",Toast.LENGTH_SHORT).show();
+
             videoPlayEnd();
 
             return false;
@@ -291,13 +290,13 @@ public class TextureVideoActivity extends Activity implements View.OnClickListen
                     Log.d(TAG, "Buffering End.");
                     break;
                 case KSYMediaPlayer.MEDIA_INFO_AUDIO_RENDERING_START:
-                    Toast.makeText(mContext, "音频载入", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Audio Rendering Start", Toast.LENGTH_SHORT).show();
                     break;
                 case KSYMediaPlayer.MEDIA_INFO_VIDEO_RENDERING_START:
-                    Toast.makeText(mContext, "视频载入", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Video Rendering Start", Toast.LENGTH_SHORT).show();
                     break;
                 case KSYMediaPlayer.MEDIA_INFO_RELOADED:
-                    Toast.makeText(mContext, "成功重载.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Succeed to reload video.", Toast.LENGTH_SHORT).show();
                     Log.d(TAG, "Succeed to mPlayerReload video.");
                     return false;
             }
@@ -307,8 +306,8 @@ public class TextureVideoActivity extends Activity implements View.OnClickListen
 
     private IMediaPlayer.OnMessageListener mOnMessageListener = new IMediaPlayer.OnMessageListener() {
         @Override
-        public void onMessage(IMediaPlayer iMediaPlayer, String name, String info, double number) {
-            Log.e(TAG, "name:" + name + ",info:" + info + ",number:" + number);
+        public void onMessage(IMediaPlayer iMediaPlayer, Bundle bundle) {
+            Log.e(TAG, "name:" + bundle.toString());
         }
     };
 
@@ -336,12 +335,12 @@ public class TextureVideoActivity extends Activity implements View.OnClickListen
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         mContext = this.getApplicationContext();
         useHwCodec = getIntent().getBooleanExtra("HWCodec", false);
 
         setContentView(R.layout.texture_player);
-        findViewById(R.id.player_qos).setVisibility(View.GONE);
+
         mPlayerPanel = (RelativeLayout) findViewById(R.id.player_panel);
         mPlayerStartBtn = (ImageView) findViewById(R.id.player_start);
         mPlayerVolume = (ImageView) findViewById(R.id.player_volume);
@@ -433,7 +432,6 @@ public class TextureVideoActivity extends Activity implements View.OnClickListen
         mQosThread = new QosThread(mContext, mHandler);
 
         mDataSource = getIntent().getStringExtra("path");
-        Log.i(getClass().getSimpleName(),"path->"+mDataSource);
 
         mVideoView.setOnBufferingUpdateListener(mOnBufferingUpdateListener);
         mVideoView.setOnCompletionListener(mOnCompletionListener);
@@ -777,20 +775,18 @@ public class TextureVideoActivity extends Activity implements View.OnClickListen
         Message msg = new Message();
         msg.what = HIDDEN_SEEKBAR;
         mHandler.sendMessageDelayed(msg, 3000);
-        int i = view.getId();
-        if (i == R.id.player_volume) {
+        int id=view.getId();
+        if(id==R.id.player_volume){
             if (!showAudioBar) {
                 showAudioBar();
             } else {
                 hideAudioBar();
             }
-
-        } else if (i == R.id.player_reload) {
+        }else if(id==R.id.player_reload){
             String mVideoUrl2 = "rtmp://live.hkstv.hk.lxdns.com/live/hks";
             // 播放新的视频
             mVideoView.reload(mVideoUrl2, true);
-
-        } else if (i == R.id.player_mirror) {
+        }else if(id==R.id.player_mirror){
             if (mMirror) {
                 mVideoView.setMirror(false);
                 mMirror = false;
@@ -798,20 +794,17 @@ public class TextureVideoActivity extends Activity implements View.OnClickListen
                 mVideoView.setMirror(true);
                 mMirror = true;
             }
-
-        } else if (i == R.id.player_rotate) {
+        }else if(id==R.id.player_rotate){
             mVideoView.setRotateDegree((rotateNum + 90) % 360);
             rotateNum += 90;
-
-        } else if (i == R.id.player_screen) {
+        }else if(id==R.id.player_screen){
             Bitmap bitmap = mVideoView.getScreenShot();
             savebitmap(bitmap);
             if (bitmap != null) {
                 Toast.makeText(TextureVideoActivity.this, "截图成功", Toast.LENGTH_SHORT).show();
             }
-
-        } else {
         }
+
     }
 
     private void hideAudioBar() {

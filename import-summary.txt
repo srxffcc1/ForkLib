@@ -1,31 +1,132 @@
 ECLIPSE ANDROID PROJECT IMPORT SUMMARY
 ======================================
 
+Manifest Merging:
+-----------------
+Your project uses libraries that provide manifests, and your Eclipse
+project did not explicitly turn on manifest merging. In Android Gradle
+projects, manifests are always merged (meaning that contents from your
+libraries' manifests will be merged into the app manifest. If you had
+manually copied contents from library manifests into your app manifest
+you may need to remove these for the app to build correctly.
+
 Ignored Files:
 --------------
 The following files were *not* copied into the new Gradle project; you
 should evaluate whether these are still needed in your project and if
 so manually move them:
 
-* .externalToolBuilders\
-* .externalToolBuilders\New_Builder.launch
-* ClassStructure.txt
-* Icons.txt
-* ReadMe.txt
-* build.sh
-* build.xml
-* local.properties.sample
+* .checkstyle
+* .project.bak
+* sdk日志.txt
+* 发布日志.txt
+
+Replaced Jars with Dependencies:
+--------------------------------
+The importer recognized the following .jar files as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the .jar file in your project was of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the jar replacement in the import wizard and try again:
+
+android-support-v4.jar => com.android.support:support-v4:23.+
+android-support-v7-appcompat.jar => com.android.support:appcompat-v7:23.+
+gson-1.7.jar => com.google.code.gson:gson:1.7
+
+Potentially Missing Dependency:
+-------------------------------
+When we replaced the following .jar files with a Gradle dependency, we
+inferred the dependency version number from the filename. This
+specific version may not actually be available from the repository.
+If you get a build error stating that the dependency is missing, edit
+the version number to for example "+" to pick up the latest version
+instead. (This may require you to update your code if the library APIs
+have changed.)
+
+gson-1.7.jar => version 1.7 in com.google.code.gson:gson:1.7
+
+Replaced Libraries with Dependencies:
+-------------------------------------
+The importer recognized the following library projects as third party
+libraries and replaced them with Gradle dependencies instead. This has
+the advantage that more explicit version information is known, and the
+libraries can be updated automatically. However, it is possible that
+the source files in your project were of an older version than the
+dependency we picked, which could render the project not compileable.
+You can disable the library replacement in the import wizard and try
+again:
+
+android-support-v7-appcompat => [com.android.support:appcompat-v7:23.+]
 
 Moved Files:
 ------------
 Android Gradle projects use a different directory structure than ADT
 Eclipse projects. Here's how the projects were restructured:
 
-* AndroidManifest.xml => choosePDFActivity\src\main\AndroidManifest.xml
-* assets\ => choosePDFActivity\src\main\assets
-* jni\ => choosePDFActivity\src\main\jni\
-* res\ => choosePDFActivity\src\main\res\
-* src\ => choosePDFActivity\src\main\java\
+* AndroidManifest.xml => jianyeyidongzhifa_feidisanfang_j\src\main\AndroidManifest.xml
+* assets\ => jianyeyidongzhifa_feidisanfang_j\src\main\assets\
+* libs\armeabi-v7a\libBaiduMapSDK_v3_3_0_15.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\libBaiduMapSDK_v3_3_0_15.so
+* libs\armeabi-v7a\libCpuFeatures.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\libCpuFeatures.so
+* libs\armeabi-v7a\libffmpeg.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\libffmpeg.so
+* libs\armeabi-v7a\libhcnetsdk.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\libhcnetsdk.so
+* libs\armeabi-v7a\libiomx-gingerbread.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\libiomx-gingerbread.so
+* libs\armeabi-v7a\libiomx-hc.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\libiomx-hc.so
+* libs\armeabi-v7a\libiomx-ics.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\libiomx-ics.so
+* libs\armeabi-v7a\liblive555.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\liblive555.so
+* libs\armeabi-v7a\liblive555test.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\liblive555test.so
+* libs\armeabi-v7a\liblocSDK5.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\liblocSDK5.so
+* libs\armeabi-v7a\libMPCtrl.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\libMPCtrl.so
+* libs\armeabi-v7a\libPlayCtrl.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\libPlayCtrl.so
+* libs\armeabi-v7a\libPlayCtrl_noneon.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\libPlayCtrl_noneon.so
+* libs\armeabi-v7a\librtspplr-armeabi-v7a-noneon.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\librtspplr-armeabi-v7a-noneon.so
+* libs\armeabi-v7a\librtspplr-armeabi-v7a.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\librtspplr-armeabi-v7a.so
+* libs\armeabi-v7a\librtstm-armeabi-v7a.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\librtstm-armeabi-v7a.so
+* libs\armeabi-v7a\libSDL2-armeabi-v7a-noneon.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\libSDL2-armeabi-v7a-noneon.so
+* libs\armeabi-v7a\libSDL2-armeabi-v7a.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\libSDL2-armeabi-v7a.so
+* libs\armeabi-v7a\libSystemTransform.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\libSystemTransform.so
+* libs\armeabi-v7a\libvlcjni.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\libvlcjni.so
+* libs\armeabi-v7a\libyuv_shared-armeabi-v7a-noneon.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\libyuv_shared-armeabi-v7a-noneon.so
+* libs\armeabi-v7a\libyuv_shared-armeabi-v7a.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi-v7a\libyuv_shared-armeabi-v7a.so
+* libs\armeabi\libBaiduMapSDK_v3_3_0_15.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi\libBaiduMapSDK_v3_3_0_15.so
+* libs\armeabi\liblocSDK5.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi\liblocSDK5.so
+* libs\armeabi\librtspplr-armeabi.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi\librtspplr-armeabi.so
+* libs\armeabi\librtstm-armeabi.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi\librtstm-armeabi.so
+* libs\armeabi\libSDL2-armeabi.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi\libSDL2-armeabi.so
+* libs\armeabi\libyuv_shared-armeabi.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\armeabi\libyuv_shared-armeabi.so
+* libs\BaiduLBS_Android.jar => jianyeyidongzhifa_feidisanfang_j\libs\BaiduLBS_Android.jar
+* libs\cglib-nodep-2.2.2.jar => jianyeyidongzhifa_feidisanfang_j\libs\cglib-nodep-2.2.2.jar
+* libs\GetuiExt-2.0.3.jar => jianyeyidongzhifa_feidisanfang_j\libs\GetuiExt-2.0.3.jar
+* libs\GetuiSDK2.6.0.0.jar => jianyeyidongzhifa_feidisanfang_j\libs\GetuiSDK2.6.0.0.jar
+* libs\HCNetSDK.jar => jianyeyidongzhifa_feidisanfang_j\libs\HCNetSDK.jar
+* libs\json_simple-1.1.jar => jianyeyidongzhifa_feidisanfang_j\libs\json_simple-1.1.jar
+* libs\mediaplayersdk.jar => jianyeyidongzhifa_feidisanfang_j\libs\mediaplayersdk.jar
+* libs\nineoldandroids-2.4.0.jar => jianyeyidongzhifa_feidisanfang_j\libs\nineoldandroids-2.4.0.jar
+* libs\org.apache.http.legacy.jar => jianyeyidongzhifa_feidisanfang_j\libs\org.apache.http.legacy.jar
+* libs\PlayerSDK.jar => jianyeyidongzhifa_feidisanfang_j\libs\PlayerSDK.jar
+* libs\pushservice-4.5.1.8.jar => jianyeyidongzhifa_feidisanfang_j\libs\pushservice-4.5.1.8.jar
+* libs\x86\librtspplr-x86.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\x86\librtspplr-x86.so
+* libs\x86\librtstm-x86.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\x86\librtstm-x86.so
+* libs\x86\libSDL2-x86.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\x86\libSDL2-x86.so
+* libs\x86\libyuv_shared-x86.so => jianyeyidongzhifa_feidisanfang_j\src\main\jniLibs\x86\libyuv_shared-x86.so
+* lint.xml => jianyeyidongzhifa_feidisanfang_j\lint.xml
+* res\ => jianyeyidongzhifa_feidisanfang_j\src\main\res\
+* src\ => jianyeyidongzhifa_feidisanfang_j\src\main\java\
+
+Missing Android Support Repository:
+-----------------------------------
+Some useful libraries, such as the Android Support Library, are
+installed from a special Maven repository, which should be installed
+via the SDK manager.
+
+It looks like this library is missing from your SDK installation at:
+null
+
+To install it, open the SDK manager, and in the Extras category,
+select "Android Support Repository". You may also want to install the
+"Google Repository" if you want to use libraries like Google Play
+Services.
 
 Next Steps:
 -----------

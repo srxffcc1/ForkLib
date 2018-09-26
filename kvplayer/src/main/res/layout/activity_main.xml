@@ -3,15 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.activity.MainActivity"
-    >
+    tools:context=".ui.activity.MainActivity">
 
 
         <FrameLayout
             android:id="@+id/contentFrame"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
+            <!--<fragment
+                android:name="com.ksyun.player.demo.ui.fragment.LocalFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>-->
         </FrameLayout>
 
 </RelativeLayout>

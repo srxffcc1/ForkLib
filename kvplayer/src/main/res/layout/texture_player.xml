@@ -153,12 +153,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp">
+        android:layout_marginBottom="10dp"
+        android:visibility="visible">
         <ImageView
             android:id="@+id/player_screen"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:visibility="gone"
             android:layout_above="@+id/player_rotate"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="10dp"
@@ -169,7 +169,6 @@
             android:id="@+id/player_rotate"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:visibility="gone"
             android:layout_above="@+id/player_reload"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
@@ -179,7 +178,6 @@
             android:id="@+id/player_reload"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:visibility="gone"
             android:layout_above="@+id/player_audio_layout"
             android:layout_alignParentRight="true"
             android:layout_marginRight="20dp"
@@ -233,7 +231,6 @@
             android:id="@+id/player_mirror"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:visibility="gone"
             android:layout_alignParentBottom="true"
             android:layout_toLeftOf="@+id/player_scale"
             android:background="@drawable/mirror" />
@@ -244,9 +241,8 @@
             android:layout_height="35dp"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="20dp"
-            android:visibility="gone"
             android:layout_toLeftOf="@+id/player_volume"
-            android:src="@drawable/scale_fit" />
+            android:src="@drawable/scale" />
 
         <ImageView
             android:id="@+id/player_volume"

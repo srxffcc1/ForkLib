@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 /**
  * Created by admin on 17/6/21.
  */
@@ -132,6 +133,7 @@ public class LocalFragment extends Fragment {
         });
 
         selectedFile = Environment.getExternalStorageDirectory();
+        localPath.setText(selectedFile.getAbsolutePath());
         fetchNew(selectedFile);
 
     }

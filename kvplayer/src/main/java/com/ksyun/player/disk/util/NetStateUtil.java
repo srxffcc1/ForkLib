@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 
 import com.ksyun.player.disk.model.NetState;
 
+
 /**
  * Created by liubohua on 2017/1/6.
  */

@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.ksyun.player.disk.R;
 import com.ksyun.player.disk.util.Settings;
 
+
 public class SettingActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener{
 
     public static final int PLAY_VIDEO = 0x1002;
@@ -241,25 +242,18 @@ public class SettingActivity extends AppCompatActivity implements RadioGroup.OnC
 
     @Override
     public void onCheckedChanged(RadioGroup radioGroup, int i) {
-        if (i == R.id.use_hw) {
+        if(i==R.id.use_hw){
             editor.putString("choose_decode", Settings.USEHARD);
-
-        } else if (i == R.id.use_sw) {
+        }else if(i==R.id.use_sw){
             editor.putString("choose_decode", Settings.USESOFT);
-
-        } else if (i == R.id.type_vod) {
+        }else if(i==R.id.type_vod){
             editor.putString("choose_type", Settings.VOD);
-
-        } else if (i == R.id.type_live) {
+        }else if(i==R.id.type_live){
             editor.putString("choose_type", Settings.LIVE);
-
-        } else if (i == R.id.type_floating) {
+        }else if(i==R.id.type_floating){
             editor.putString("choose_type", Settings.FLOATING);
-
-        } else if (i == R.id.type_media_player) {
+        }else if(i==R.id.type_media_player){
             editor.putString("choose_type", Settings.MEDIA_PLAYER);
-
-        } else {
         }
         editor.commit();
     }

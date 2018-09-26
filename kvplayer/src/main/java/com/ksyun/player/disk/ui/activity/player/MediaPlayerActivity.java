@@ -11,10 +11,10 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.widget.Toast;
 
-
 import com.ksyun.player.disk.R;
 
 import java.io.IOException;
+
 
 /**
  * Created by xbc on 2017/4/27.

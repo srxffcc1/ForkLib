@@ -16,6 +16,7 @@ import android.widget.Toast;
 import com.danielkim.soundrecorder.FilePath;
 import com.danielkim.soundrecorder.R;
 import com.danielkim.soundrecorder.RecordingService;
+import com.danielkim.soundrecorder.activities.RecordActivity;
 import com.melnykov.fab.FloatingActionButton;
 
 import java.io.File;
@@ -32,6 +33,7 @@ public class RecordFragment extends Fragment {
     private static final String ARG_POSITION = "position";
     private static final String LOG_TAG = RecordFragment.class.getSimpleName();
 
+    public int recoremode=0;
     private int position;
 
     //Recording controls
@@ -53,10 +55,11 @@ public class RecordFragment extends Fragment {
      *
      * @return A new instance of fragment Record_Fragment.
      */
-    public static RecordFragment newInstance(int position) {
+    public static RecordFragment newInstance(int position,int recoremode) {
         RecordFragment f = new RecordFragment();
         Bundle b = new Bundle();
         b.putInt(ARG_POSITION, position);
+        b.putInt("recordmode",recoremode);
         f.setArguments(b);
 
         return f;
@@ -69,6 +72,7 @@ public class RecordFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         position = getArguments().getInt(ARG_POSITION);
+        recoremode=getArguments().getInt("recordmode");
     }
 
     @Override
@@ -158,8 +162,12 @@ public class RecordFragment extends Fragment {
             mRecordingPrompt.setText(getString(R.string.record_prompt));
 
             getActivity().stopService(intent);
+
             //allow the screen to turn off again once recording is finished
             getActivity().getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+            if(recoremode==1){//说明需要直接返回路径了
+                ((RecordActivity)getActivity()).setRecordResult(FilePath.tmpnowpath);
+            }
         }
     }
 

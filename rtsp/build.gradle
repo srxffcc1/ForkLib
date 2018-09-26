@@ -36,7 +36,7 @@ publish {
     artifactId = 'rtsp'//在bintray上的package名字
     publishVersion = '1.0.0'//版本号
     desc = 'just upload this and ?'//描述，不重要
-    website = 'https://github.com/srxffcc1/un7zip'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
+    website = 'https://github.com/srxffcc1/Codefactory'//网站，不重要；尽量模拟github上的地址，例如我这样的；当然你有地址最好了
     licences = ['Apache-2.0']//协议
 }
 tasks.withType(Javadoc) { //防止doc错误

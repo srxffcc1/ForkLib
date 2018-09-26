@@ -9,10 +9,10 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
 
-    <com.ksyun.player.disk.zxing.view.ViewfinderView
-        android:id="@+id/viewfinder_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <!--<com.ksyun.player.disk.zxing.view.ViewfinderView-->
+        <!--android:id="@+id/viewfinder_view"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
 
     <RelativeLayout
         android:layout_width="fill_parent"

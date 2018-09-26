@@ -26,12 +26,15 @@ public class RecordActivity extends AppCompatActivity{
     private Uri path;
     private PagerSlidingTabStrip tabs;
     private ViewPager pager;
+    public int recoremode=0;
+    public static final int RECORDOK=777;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.recoed_activity_main);
         path=getIntent().getParcelableExtra(MediaStore.EXTRA_OUTPUT);
+        recoremode=getIntent().getIntExtra("recordmode",0);//设置录制模式
         if(!"".equals(path)){
             FilePath.dir=path.getPath()+"/";
         }
@@ -72,6 +75,13 @@ public class RecordActivity extends AppCompatActivity{
         }
     }
 
+    public void setRecordResult(String resultpath){
+        Intent intent=new Intent();
+        intent.putExtra("voicepath",resultpath);
+        setResult(RECORDOK,intent);
+        finish();
+    }
+
     public class MyAdapter extends FragmentPagerAdapter {
         private String[] titles = { getString(R.string.tab_title_record),
                 getString(R.string.tab_title_saved_recordings) };
@@ -84,7 +94,7 @@ public class RecordActivity extends AppCompatActivity{
         public Fragment getItem(int position) {
             switch(position){
                 case 0:{
-                    return RecordFragment.newInstance(position);
+                    return RecordFragment.newInstance(position,recoremode);
                 }
                 case 1:{
                     return FileViewerFragment.newInstance(position);
